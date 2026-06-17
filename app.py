@@ -865,12 +865,140 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     margin-bottom:10px;
 }
 
+/* BIM / API VIEWER MOCKUP */
+.viewer-grid{
+    display:grid;
+    grid-template-columns:1.5fr .8fr;
+    gap:18px;
+}
+.viewer-shell{
+    background:#05070a;
+    border:1px solid var(--line);
+    border-radius:24px;
+    overflow:hidden;
+    min-height:520px;
+    position:relative;
+}
+.viewer-toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    padding:14px 16px;
+    border-bottom:1px solid var(--line);
+    background:rgba(255,255,255,.025);
+}
+.viewer-actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+.viewer-actions button,
+.api-pill{
+    border:1px solid rgba(200,173,106,.32);
+    background:rgba(200,173,106,.06);
+    color:#d9cfad;
+    border-radius:999px;
+    padding:8px 11px;
+    font-size:12px;
+    cursor:pointer;
+}
+.viewer-actions button:hover{background:rgba(200,173,106,.15)}
+.viewer-canvas{
+    height:440px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    background:
+        radial-gradient(circle at 55% 45%,rgba(200,173,106,.22),transparent 24%),
+        linear-gradient(135deg,rgba(140,166,217,.10),rgba(255,255,255,.015)),
+        repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 1px,transparent 1px 44px),
+        repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 44px);
+}
+.model-box{
+    width:300px;
+    height:230px;
+    border:1px solid rgba(224,201,135,.7);
+    transform:rotateX(58deg) rotateZ(-36deg);
+    transform-style:preserve-3d;
+    position:relative;
+    box-shadow:0 0 45px rgba(200,173,106,.16);
+    background:rgba(200,173,106,.035);
+}
+.model-box:before,
+.model-box:after{
+    content:"";
+    position:absolute;
+    inset:34px;
+    border:1px solid rgba(224,201,135,.38);
+}
+.model-box:after{
+    inset:75px;
+    border-color:rgba(140,166,217,.45);
+}
+.model-label{
+    position:absolute;
+    bottom:22px;
+    left:22px;
+    color:var(--muted);
+    font-size:12px;
+    background:rgba(7,9,12,.75);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:10px 12px;
+}
+.viewer-side{
+    display:grid;
+    gap:14px;
+}
+.integration-card{
+    background:rgba(7,9,12,.50);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:18px;
+}
+.integration-card h3{
+    font-size:17px;
+    font-weight:500;
+    margin-bottom:8px;
+}
+.api-log{
+    background:rgba(7,9,12,.70);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:16px;
+    color:#bdb8aa;
+    font-family:Consolas,monospace;
+    font-size:12px;
+    line-height:1.7;
+    white-space:pre-wrap;
+}
+.connector-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+    margin-top:16px;
+}
+.connector-card{
+    background:rgba(7,9,12,.50);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:18px;
+}
+.connector-card strong{
+    display:block;
+    color:var(--gold2);
+    margin-bottom:8px;
+    font-weight:500;
+}
+
 
 @media(max-width:1000px){
     body{display:block}
     .sidebar{width:100%;height:auto;position:relative}
     .main{margin-left:0;width:100%;padding:22px}
-    .grid4,.grid3,.timeline-summary,.cashflow,.document-grid,.planning-grid,.scenario-grid,.alert-grid,.live-grid,.evidence-grid,.next-grid,.compare-grid,.weather-grid,.traffic-grid{grid-template-columns:1fr}
+    .grid4,.grid3,.timeline-summary,.cashflow,.document-grid,.planning-grid,.scenario-grid,.alert-grid,.live-grid,.viewer-grid,.connector-grid,.evidence-grid,.next-grid,.compare-grid,.weather-grid,.traffic-grid{grid-template-columns:1fr}
     .grid2{grid-template-columns:1fr}
     .close-row{grid-template-columns:1fr}
     .visual-timeline{grid-template-columns:1fr;gap:14px}
@@ -1422,6 +1550,7 @@ function projectWorkspace(name, division){
             <button class="active" onclick="showModule('${id}-dashboard', this)">Dashboard Ejecutivo</button>
             ${division === 'construction' ? `
                 <button onclick="showModule('${id}-live', this)">Obra en Vivo</button>
+                <button onclick="showModule('${id}-viewer', this)">Visualizador 3D / API</button>
                 <button onclick="showModule('${id}-evidence', this)">Evidencias</button>
                 <button onclick="showModule('${id}-progressmap', this)">Mapa de Avance</button>
                 <button onclick="showModule('${id}-next7', this)">Próximos 7 Días</button>
@@ -1478,6 +1607,90 @@ function projectWorkspace(name, division){
                         <span class="status progress">Programado</span>
                     </div>
                 </div>
+            </div>
+        </div>
+
+
+        <div id="${id}-viewer" class="module">
+            <div class="item">
+                <h3>Visualizador 3D integrado por API</h3>
+                <small>Ejemplo de cómo Gradum Portal puede mostrar un modelo BIM/3D sin construir un motor propio. En producción este espacio puede usar Autodesk Platform Services Viewer, That Open / IFC.js o Speckle Viewer.</small>
+            </div>
+
+            <div class="viewer-grid">
+                <div class="viewer-shell">
+                    <div class="viewer-toolbar">
+                        <div>
+                            <span class="api-pill" id="${id}-viewerSource">Autodesk APS Viewer</span>
+                        </div>
+                        <div class="viewer-actions">
+                            <button onclick="setViewerSource('${id}','Autodesk APS Viewer')">Autodesk</button>
+                            <button onclick="setViewerSource('${id}','IFC.js / That Open')">IFC</button>
+                            <button onclick="setViewerSource('${id}','Speckle Viewer')">Speckle</button>
+                            <button onclick="setViewerMode('${id}','Sección')">Sección</button>
+                            <button onclick="setViewerMode('${id}','Medición')">Medición</button>
+                            <button onclick="setViewerMode('${id}','Markup')">Markup</button>
+                        </div>
+                    </div>
+                    <div class="viewer-canvas">
+                        <div class="model-box"></div>
+                        <div class="model-label" id="${id}-viewerMode">
+                            Modelo: Casa / Local Comercial · Nivel 01<br>
+                            Modo activo: Navegación 3D<br>
+                            Estado: sincronizado con documentos y avance.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="viewer-side">
+                    <div class="integration-card">
+                        <div class="eyebrow">Modelo conectado</div>
+                        <h3>Modelo BIM / IFC</h3>
+                        <p>Archivo fuente: <strong style="font-size:16px">Proyecto_Gradum.ifc</strong></p>
+                        <small>Última revisión: V03 · Coordinación arquitectónica y estructural.</small>
+                        <br><span class="status done">Modelo actualizado</span>
+                    </div>
+
+                    <div class="integration-card">
+                        <div class="eyebrow">Documentos vinculados</div>
+                        <h3>Planos relacionados</h3>
+                        <small>ARQ-MIVED-V03.pdf · Estructural-V02.pdf · Constructivo-Interno-V04.pdf</small>
+                        <br><span class="status progress">3 documentos enlazados</span>
+                    </div>
+
+                    <div class="integration-card">
+                        <div class="eyebrow">Datos del proyecto</div>
+                        <h3>Planificado vs ejecutado</h3>
+                        <p>El modelo se puede combinar con fotos, reportes, hitos y avance por zona.</p>
+                        <div class="bar"><div class="fill" style="width:62%"></div></div>
+                        <small>Avance físico vinculado: 62%</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="connector-grid">
+                <div class="connector-card">
+                    <strong>Autodesk APS</strong>
+                    <small>Para Revit, DWG, Navisworks, modelos 2D/3D, mediciones, secciones y markups embebidos en el portal.</small>
+                </div>
+                <div class="connector-card">
+                    <strong>That Open / IFC.js</strong>
+                    <small>Para un visor propio basado en IFC, útil para MVP y menor dependencia de licencias externas.</small>
+                </div>
+                <div class="connector-card">
+                    <strong>Speckle</strong>
+                    <small>Para colaboración BIM, versiones, datos del modelo, automatizaciones y conexión con flujos AEC.</small>
+                </div>
+            </div>
+
+            <div class="panel" style="margin-top:18px">
+                <div class="eyebrow">Ejemplo técnico</div>
+                <h2>Flujo API recomendado</h2>
+                <div class="api-log" id="${id}-apiLog">1. Gradum Portal solicita token seguro al backend.
+2. Backend conecta con Autodesk APS / Speckle / almacenamiento IFC.
+3. Se carga el modelo en el viewer embebido.
+4. El portal cruza modelo + documentos + fotos + avance + incidencias.
+5. El cliente ve una experiencia simple, aunque el motor técnico esté por detrás.</div>
             </div>
         </div>
 
@@ -1617,6 +1830,40 @@ function projectWorkspace(name, division){
         <div id="${id}-milestones" class="module"><div class="item"><h3>Aprobación pendiente</h3><small>Cliente debe aprobar el último entregable para avanzar.</small></div></div>
     </div>`;
 }
+
+
+function setViewerSource(id, source){
+    const sourceEl = document.getElementById(id + "-viewerSource");
+    const logEl = document.getElementById(id + "-apiLog");
+
+    if(sourceEl){ sourceEl.textContent = source; }
+
+    if(logEl){
+        logEl.textContent =
+`Conector activo: ${source}
+
+Ejemplo de integración:
+- Gradum Portal mantiene la experiencia del cliente.
+- El viewer externo renderiza el modelo 3D/BIM.
+- El backend protege tokens, permisos y credenciales.
+- La base de datos Gradum relaciona modelo, planos, fotos, incidencias y reportes.
+
+Nota MVP:
+Esto es una simulación visual. En producción aquí se monta el SDK/API real del proveedor.`;
+    }
+}
+
+function setViewerMode(id, mode){
+    const modeEl = document.getElementById(id + "-viewerMode");
+
+    if(modeEl){
+        modeEl.innerHTML =
+`Modelo: Casa / Local Comercial · Nivel 01<br>
+Modo activo: ${mode}<br>
+Estado: herramienta simulada lista para integrarse vía API.`;
+    }
+}
+
 
 function showModule(moduleId, button){
     const parent = button.closest(".panel");
