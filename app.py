@@ -21,6 +21,8 @@ HTML = """
     --gold:#c8ad6a;
     --gold2:#e0c987;
     --green:#85d49a;
+    --red:#d98c8c;
+    --blue:#8ca6d9;
 }
 
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,Arial,sans-serif}
@@ -245,6 +247,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 .progress{background:rgba(200,173,106,.12);color:var(--gold2)}
 .review{background:rgba(255,255,255,.08);color:#e5ded0}
 .done{background:rgba(133,212,154,.12);color:var(--green)}
+.danger{background:rgba(217,140,140,.12);color:var(--red)}
 
 .tabs{
     display:flex;
@@ -372,10 +375,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     background:rgba(255,255,255,.018);
 }
 
-.gantt{
-    min-width:900px;
-    padding:20px;
-}
+.gantt{min-width:900px;padding:20px}
 
 .gantt-header,
 .gantt-row{
@@ -401,11 +401,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 }
 
 .gantt-row:last-child{border-bottom:none}
-
-.gantt-project{
-    color:var(--text);
-    font-size:14px;
-}
+.gantt-project{color:var(--text);font-size:14px}
 
 .gantt-cell{
     height:18px;
@@ -421,13 +417,8 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     box-shadow:0 0 18px rgba(200,173,106,.16);
 }
 
-.gantt-bar.review{
-    background:linear-gradient(90deg,#8f8f8a,#d7d0bf);
-}
-
-.gantt-bar.donebar{
-    background:linear-gradient(90deg,#6eaf7d,#9be0aa);
-}
+.gantt-bar.review{background:linear-gradient(90deg,#8f8f8a,#d7d0bf)}
+.gantt-bar.donebar{background:linear-gradient(90deg,#6eaf7d,#9be0aa)}
 
 .gantt-legend{
     display:flex;
@@ -454,11 +445,99 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 .legend-dot.review-dot{background:#d7d0bf}
 .legend-dot.done-dot{background:#9be0aa}
 
+/* FINANCE DASHBOARD */
+.finance-table{
+    width:100%;
+    border-collapse:collapse;
+    overflow:hidden;
+    border-radius:16px;
+}
+
+.finance-table th,
+.finance-table td{
+    padding:15px;
+    border-bottom:1px solid rgba(255,255,255,.06);
+    text-align:left;
+    color:var(--muted);
+    font-size:14px;
+}
+
+.finance-table th{
+    color:var(--gold);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1.2px;
+}
+
+.finance-table td strong{
+    color:var(--text);
+    font-weight:500;
+}
+
+.trend-up{color:var(--green)!important}
+.trend-down{color:var(--red)!important}
+
+.cashflow{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:12px;
+    margin-top:12px;
+}
+
+.cash-month{
+    background:rgba(255,255,255,.025);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:16px;
+}
+
+.cash-month h4{
+    font-size:13px;
+    font-weight:500;
+    margin-bottom:12px;
+}
+
+.cash-bar{
+    height:100px;
+    display:flex;
+    align-items:flex-end;
+    gap:6px;
+}
+
+.cash-in,.cash-out{
+    width:50%;
+    border-radius:8px 8px 0 0;
+}
+
+.cash-in{background:linear-gradient(180deg,var(--green),rgba(133,212,154,.35))}
+.cash-out{background:linear-gradient(180deg,var(--red),rgba(217,140,140,.30))}
+
+.document-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+}
+
+.doc-card{
+    background:rgba(7,9,12,.50);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:18px;
+}
+
+.doc-card h3{
+    font-size:15px;
+    font-weight:500;
+    margin-bottom:8px;
+}
+
+.doc-card small{color:var(--muted)}
+
 @media(max-width:1000px){
     body{display:block}
     .sidebar{width:100%;height:auto;position:relative}
     .main{margin-left:0;width:100%;padding:22px}
-    .grid4,.grid3,.timeline-summary{grid-template-columns:1fr}
+    .grid4,.grid3,.timeline-summary,.cashflow,.document-grid{grid-template-columns:1fr}
     .grid2{grid-template-columns:1fr}
     .visual-timeline{grid-template-columns:1fr;gap:14px}
     .timeline-step{border-radius:20px!important}
@@ -560,9 +639,13 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     </div>
 
     <div class="grid3">
-        <div class="card" onclick="openProject('services','Contabilidad para Cliente Corporativo')">
-            <div><div class="eyebrow">Finance Operations</div><h3>Contabilidad</h3><p>Reportes financieros, impuestos, conciliaciones y documentos contables.</p></div>
-            <span class="status progress">Open Workspace</span>
+        <div class="card" onclick="openFinanceDashboard('Cliente Corporativo')">
+            <div>
+                <div class="eyebrow">Finance Operations</div>
+                <h3>Contabilidad</h3>
+                <p>Financial Control Center, estados financieros, cash flow, impuestos y documentos contables.</p>
+            </div>
+            <span class="status progress">Open Finance Dashboard</span>
         </div>
 
         <div class="card" onclick="openProject('services','Identidad Visual Marca Premium')">
@@ -702,6 +785,148 @@ function openProject(division, projectName){
     container.innerHTML = projectWorkspace(projectName, division);
 }
 
+function openFinanceDashboard(clientName){
+    const container = document.getElementById("servicesProject");
+    container.innerHTML = financeDashboard(clientName);
+}
+
+function financeDashboard(clientName){
+    return `
+    <div class="panel" style="margin-top:22px">
+        <div class="eyebrow">Financial Control Center</div>
+        <h2>Contabilidad & Finanzas · ${clientName}</h2>
+        <p>Dashboard financiero para monitorear ingresos, gastos, utilidad, flujo de caja, cuentas por cobrar, cuentas por pagar, impuestos y documentos contables.</p>
+
+        <div class="tabs">
+            <button class="active" onclick="showModule('finance-summary', this)">Resumen Financiero</button>
+            <button onclick="showModule('finance-income', this)">Estado de Resultados</button>
+            <button onclick="showModule('finance-cashflow', this)">Cash Flow</button>
+            <button onclick="showModule('finance-arap', this)">CxC / CxP</button>
+            <button onclick="showModule('finance-taxes', this)">Impuestos</button>
+            <button onclick="showModule('finance-kpis', this)">KPIs Financieros</button>
+            <button onclick="showModule('finance-docs', this)">Documentos</button>
+        </div>
+
+        <div id="finance-summary" class="module active">
+            <div class="grid3">
+                <div class="widget"><h3>Ingresos</h3><strong>RD$2.4M</strong><p>Facturación mensual estimada.</p></div>
+                <div class="widget"><h3>Gastos</h3><strong>RD$1.6M</strong><p>Costos y gastos operativos.</p></div>
+                <div class="widget"><h3>Utilidad Neta</h3><strong>RD$820K</strong><p>Resultado neto del período.</p></div>
+            </div>
+
+            <div class="grid3">
+                <div class="widget"><h3>Margen Neto</h3><strong>34%</strong><p>Rentabilidad sobre ingresos.</p></div>
+                <div class="widget"><h3>Cash Balance</h3><strong>RD$1.1M</strong><p>Disponible proyectado.</p></div>
+                <div class="widget"><h3>Compliance</h3><strong>OK</strong><p>Sin alertas fiscales críticas.</p></div>
+            </div>
+
+            <div class="item">
+                <h3>Lectura ejecutiva</h3>
+                <small>El período muestra una posición saludable, con margen positivo, flujo de caja estable y obligaciones fiscales bajo control. Se recomienda dar seguimiento a facturas vencidas y pagos programados.</small>
+            </div>
+        </div>
+
+        <div id="finance-income" class="module">
+            <table class="finance-table">
+                <thead>
+                    <tr>
+                        <th>Concepto</th>
+                        <th>Actual</th>
+                        <th>Anterior</th>
+                        <th>Variación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Ingresos</strong></td><td>RD$2,400,000</td><td>RD$2,050,000</td><td class="trend-up">+17.1%</td></tr>
+                    <tr><td><strong>Costos Directos</strong></td><td>RD$920,000</td><td>RD$870,000</td><td class="trend-down">+5.7%</td></tr>
+                    <tr><td><strong>Margen Bruto</strong></td><td>RD$1,480,000</td><td>RD$1,180,000</td><td class="trend-up">+25.4%</td></tr>
+                    <tr><td><strong>Gastos Operativos</strong></td><td>RD$530,000</td><td>RD$510,000</td><td class="trend-down">+3.9%</td></tr>
+                    <tr><td><strong>EBITDA</strong></td><td>RD$950,000</td><td>RD$670,000</td><td class="trend-up">+41.8%</td></tr>
+                    <tr><td><strong>Utilidad Neta</strong></td><td>RD$820,000</td><td>RD$590,000</td><td class="trend-up">+39.0%</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="finance-cashflow" class="module">
+            <div class="item">
+                <h3>Cash Flow Projection</h3>
+                <small>Entradas y salidas proyectadas por mes. Verde representa entradas; rojo representa salidas.</small>
+            </div>
+
+            <div class="cashflow">
+                <div class="cash-month"><h4>Enero</h4><div class="cash-bar"><div class="cash-in" style="height:70%"></div><div class="cash-out" style="height:48%"></div></div></div>
+                <div class="cash-month"><h4>Febrero</h4><div class="cash-bar"><div class="cash-in" style="height:76%"></div><div class="cash-out" style="height:56%"></div></div></div>
+                <div class="cash-month"><h4>Marzo</h4><div class="cash-bar"><div class="cash-in" style="height:82%"></div><div class="cash-out" style="height:50%"></div></div></div>
+                <div class="cash-month"><h4>Abril</h4><div class="cash-bar"><div class="cash-in" style="height:64%"></div><div class="cash-out" style="height:58%"></div></div></div>
+                <div class="cash-month"><h4>Mayo</h4><div class="cash-bar"><div class="cash-in" style="height:88%"></div><div class="cash-out" style="height:60%"></div></div></div>
+                <div class="cash-month"><h4>Junio</h4><div class="cash-bar"><div class="cash-in" style="height:92%"></div><div class="cash-out" style="height:62%"></div></div></div>
+            </div>
+
+            <div class="grid3" style="margin-top:22px">
+                <div class="widget"><h3>Entradas</h3><strong>RD$2.1M</strong><p>Cobros esperados.</p></div>
+                <div class="widget"><h3>Salidas</h3><strong>RD$1.3M</strong><p>Pagos programados.</p></div>
+                <div class="widget"><h3>Balance</h3><strong>RD$800K</strong><p>Flujo neto proyectado.</p></div>
+            </div>
+        </div>
+
+        <div id="finance-arap" class="module">
+            <div class="grid2">
+                <div class="panel">
+                    <h2>Cuentas por Cobrar</h2>
+                    <div class="item"><h3>Factura #00124</h3><small>Cliente A · RD$240,000 · Vence en 5 días</small><br><span class="status progress">Pendiente</span></div>
+                    <div class="item"><h3>Factura #00125</h3><small>Cliente B · RD$185,000 · Vencida 12 días</small><br><span class="status danger">Vencida</span></div>
+                    <div class="item"><h3>Factura #00126</h3><small>Cliente C · RD$310,000 · Vence en 18 días</small><br><span class="status review">En plazo</span></div>
+                </div>
+
+                <div class="panel">
+                    <h2>Cuentas por Pagar</h2>
+                    <div class="item"><h3>Proveedor Materiales</h3><small>RD$360,000 · Pago programado</small><br><span class="status progress">Próximo pago</span></div>
+                    <div class="item"><h3>Servicios Profesionales</h3><small>RD$95,000 · Pendiente aprobación</small><br><span class="status review">Revisión</span></div>
+                    <div class="item"><h3>Software / Licencias</h3><small>RD$48,000 · Recurrente mensual</small><br><span class="status done">Controlado</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="finance-taxes" class="module">
+            <div class="grid3">
+                <div class="widget"><h3>ITBIS por pagar</h3><strong>RD$186K</strong><p>Estimado del período.</p></div>
+                <div class="widget"><h3>Retenciones</h3><strong>RD$42K</strong><p>Retenciones acumuladas.</p></div>
+                <div class="widget"><h3>Próxima fecha</h3><strong>20</strong><p>Día límite fiscal.</p></div>
+            </div>
+
+            <div class="item"><h3>Estado fiscal</h3><small>Declaraciones en preparación. No se detectan atrasos críticos en el período actual.</small><br><span class="status done">Compliance OK</span></div>
+            <div class="item"><h3>Acción recomendada</h3><small>Validar comprobantes fiscales, retenciones y conciliación de ingresos antes de cierre.</small><br><span class="status review">Revisión necesaria</span></div>
+        </div>
+
+        <div id="finance-kpis" class="module">
+            <div class="grid3">
+                <div class="widget"><h3>Margen Bruto</h3><strong>61%</strong><p>Ingresos menos costos directos.</p></div>
+                <div class="widget"><h3>Margen Neto</h3><strong>34%</strong><p>Utilidad neta sobre ingresos.</p></div>
+                <div class="widget"><h3>Liquidez</h3><strong>1.8x</strong><p>Capacidad de cubrir obligaciones.</p></div>
+            </div>
+
+            <div class="grid3">
+                <div class="widget"><h3>DSO</h3><strong>28d</strong><p>Días promedio de cobro.</p></div>
+                <div class="widget"><h3>Endeudamiento</h3><strong>22%</strong><p>Pasivos sobre activos.</p></div>
+                <div class="widget"><h3>Burn Rate</h3><strong>RD$530K</strong><p>Gasto operativo mensual.</p></div>
+            </div>
+        </div>
+
+        <div id="finance-docs" class="module">
+            <div class="document-grid">
+                <div class="doc-card"><h3>Estados Financieros</h3><small>Balance general, estado de resultados y flujo de efectivo.</small></div>
+                <div class="doc-card"><h3>Facturas</h3><small>Emitidas, recibidas, vencidas y pagadas.</small></div>
+                <div class="doc-card"><h3>Recibos</h3><small>Soportes de pagos y cobros.</small></div>
+                <div class="doc-card"><h3>Conciliación Bancaria</h3><small>Validación mensual de movimientos.</small></div>
+                <div class="doc-card"><h3>Declaraciones Fiscales</h3><small>ITBIS, retenciones y reportes fiscales.</small></div>
+                <div class="doc-card"><h3>Comprobantes</h3><small>NCF, proveedores y documentos tributarios.</small></div>
+                <div class="doc-card"><h3>Presupuestos</h3><small>Proyección financiera y control presupuestario.</small></div>
+                <div class="doc-card"><h3>Reportes Ejecutivos</h3><small>Resumen financiero para gerencia o cliente.</small></div>
+            </div>
+        </div>
+    </div>`;
+}
+
 function projectWorkspace(name, division){
     const id = division + "Module";
 
@@ -724,78 +949,21 @@ function projectWorkspace(name, division){
 
         <div id="${id}-dashboard" class="module active">
             <div class="grid3">
-                <div class="widget">
-                    <h3>Avance</h3>
-                    <strong>62%</strong>
-                    <p>Progreso general del proyecto.</p>
-                </div>
-
-                <div class="widget">
-                    <h3>Estado</h3>
-                    <strong>Activo</strong>
-                    <p>Proyecto en ejecución.</p>
-                </div>
-
-                <div class="widget">
-                    <h3>Próximo hito</h3>
-                    <strong>28 Jun</strong>
-                    <p>Entrega parcial programada.</p>
-                </div>
+                <div class="widget"><h3>Avance</h3><strong>62%</strong><p>Progreso general del proyecto.</p></div>
+                <div class="widget"><h3>Estado</h3><strong>Activo</strong><p>Proyecto en ejecución.</p></div>
+                <div class="widget"><h3>Próximo hito</h3><strong>28 Jun</strong><p>Entrega parcial programada.</p></div>
             </div>
-
-            <div class="item">
-                <h3>Executive Summary</h3>
-                <small>
-                    El proyecto avanza conforme al plan. Existen documentos pendientes de aprobación,
-                    un cambio en revisión y próximos hitos programados para cierre de fase.
-                </small>
-            </div>
+            <div class="item"><h3>Executive Summary</h3><small>El proyecto avanza conforme al plan. Existen documentos pendientes de aprobación, un cambio en revisión y próximos hitos programados para cierre de fase.</small></div>
         </div>
 
         <div id="${id}-timeline" class="module">
             <div class="visual-timeline">
-
-                <div class="timeline-step completed">
-                    <div class="circle">1</div>
-                    <div class="line"></div>
-                    <h3>Brief / Alcance</h3>
-                    <small>Definición inicial, objetivos, responsables y entregables.</small>
-                    <span>01 Jun - 03 Jun</span>
-                </div>
-
-                <div class="timeline-step completed">
-                    <div class="circle">2</div>
-                    <div class="line"></div>
-                    <h3>Planificación</h3>
-                    <small>Cronograma, presupuesto, recursos y estructura de trabajo.</small>
-                    <span>04 Jun - 10 Jun</span>
-                </div>
-
-                <div class="timeline-step active-step">
-                    <div class="circle">3</div>
-                    <div class="line"></div>
-                    <h3>Ejecución</h3>
-                    <small>Desarrollo operativo, construcción, diseño o implementación.</small>
-                    <span>11 Jun - 25 Jun</span>
-                </div>
-
-                <div class="timeline-step pending">
-                    <div class="circle">4</div>
-                    <div class="line"></div>
-                    <h3>Revisión</h3>
-                    <small>Validación interna, control de calidad y aprobación del cliente.</small>
-                    <span>26 Jun - 28 Jun</span>
-                </div>
-
-                <div class="timeline-step pending">
-                    <div class="circle">5</div>
-                    <h3>Entrega Final</h3>
-                    <small>Cierre, documentación final y entrega formal del proyecto.</small>
-                    <span>29 Jun</span>
-                </div>
-
+                <div class="timeline-step completed"><div class="circle">1</div><div class="line"></div><h3>Brief / Alcance</h3><small>Definición inicial, objetivos, responsables y entregables.</small><span>01 Jun - 03 Jun</span></div>
+                <div class="timeline-step completed"><div class="circle">2</div><div class="line"></div><h3>Planificación</h3><small>Cronograma, presupuesto, recursos y estructura de trabajo.</small><span>04 Jun - 10 Jun</span></div>
+                <div class="timeline-step active-step"><div class="circle">3</div><div class="line"></div><h3>Ejecución</h3><small>Desarrollo operativo, construcción, diseño o implementación.</small><span>11 Jun - 25 Jun</span></div>
+                <div class="timeline-step pending"><div class="circle">4</div><div class="line"></div><h3>Revisión</h3><small>Validación interna, control de calidad y aprobación del cliente.</small><span>26 Jun - 28 Jun</span></div>
+                <div class="timeline-step pending"><div class="circle">5</div><h3>Entrega Final</h3><small>Cierre, documentación final y entrega formal del proyecto.</small><span>29 Jun</span></div>
             </div>
-
             <div class="timeline-summary">
                 <div class="widget"><h3>Fase actual</h3><strong>3/5</strong><p>Ejecución en progreso.</p></div>
                 <div class="widget"><h3>Días restantes</h3><strong>12</strong><p>Hasta entrega final.</p></div>
@@ -804,75 +972,22 @@ function projectWorkspace(name, division){
         </div>
 
         <div id="${id}-gantt" class="module">
-            <div class="item">
-                <h3>Diagrama de Gantt</h3>
-                <small>Vista temporal de proyectos y fases principales dentro del portafolio activo.</small>
-            </div>
-
+            <div class="item"><h3>Diagrama de Gantt</h3><small>Vista temporal de proyectos y fases principales dentro del portafolio activo.</small></div>
             <div class="gantt-wrapper">
                 <div class="gantt">
                     <div class="gantt-header">
-                        <div>Proyecto / Fase</div>
-                        <div>Semana 1</div>
-                        <div>Semana 2</div>
-                        <div>Semana 3</div>
-                        <div>Semana 4</div>
-                        <div>Semana 5</div>
-                        <div>Semana 6</div>
-                        <div>Semana 7</div>
-                        <div>Semana 8</div>
+                        <div>Proyecto / Fase</div><div>Semana 1</div><div>Semana 2</div><div>Semana 3</div><div>Semana 4</div><div>Semana 5</div><div>Semana 6</div><div>Semana 7</div><div>Semana 8</div>
                     </div>
-
                     <div class="gantt-row">
                         <div class="gantt-project">Remodelación Local Comercial</div>
-                        <div class="gantt-cell"><div class="gantt-bar donebar" style="width:100%"></div></div>
-                        <div class="gantt-cell"><div class="gantt-bar donebar" style="width:100%"></div></div>
-                        <div class="gantt-cell"><div class="gantt-bar" style="width:100%"></div></div>
-                        <div class="gantt-cell"><div class="gantt-bar" style="width:85%"></div></div>
-                        <div class="gantt-cell"></div>
-                        <div class="gantt-cell"></div>
-                        <div class="gantt-cell"></div>
-                        <div class="gantt-cell"></div>
+                        <div class="gantt-cell"><div class="gantt-bar donebar" style="width:100%"></div></div><div class="gantt-cell"><div class="gantt-bar donebar" style="width:100%"></div></div><div class="gantt-cell"><div class="gantt-bar" style="width:100%"></div></div><div class="gantt-cell"><div class="gantt-bar" style="width:85%"></div></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
                     </div>
-
                     <div class="gantt-row">
                         <div class="gantt-project">Obra Residencial Moderna</div>
-                        <div class="gantt-cell"></div>
-                        <div class="gantt-cell"><div class="gantt-bar review" style="width:70%"></div></div>
-                        <div class="gantt-cell"><div class="gantt-bar" style="width:100%"></div></div>
-                        <div class="gantt-cell"><div class="gantt-bar" style="width:100%"></div></div>
-                        <div class="gantt-cell"><div class="gantt-bar" style="width:60%"></div></div>
-                        <div class="gantt-cell"></div>
-                        <div class="gantt-cell"></div>
-                        <div class="gantt-cell"></div>
-                    </div>
-
-                    <div class="gantt-row">
-                        <div class="gantt-project">Documentación Técnica</div>
-                        <div class="gantt-cell"></div>
-                        <div class="gantt-cell"></div>
-                        <div class="gantt-cell"><div class="gantt-bar review" style="width:60%"></div></div>
-                        <div class="gantt-cell"><div class="gantt-bar review" style="width:100%"></div></div>
-                        <div class="gantt-cell"><div class="gantt-bar review" style="width:100%"></div></div>
-                        <div class="gantt-cell"><div class="gantt-bar review" style="width:40%"></div></div>
-                        <div class="gantt-cell"></div>
-                        <div class="gantt-cell"></div>
-                    </div>
-
-                    <div class="gantt-row">
-                        <div class="gantt-project">Entrega / Cierre</div>
-                        <div class="gantt-cell"></div>
-                        <div class="gantt-cell"></div>
-                        <div class="gantt-cell"></div>
-                        <div class="gantt-cell"></div>
-                        <div class="gantt-cell"><div class="gantt-bar" style="width:50%"></div></div>
-                        <div class="gantt-cell"><div class="gantt-bar" style="width:100%"></div></div>
-                        <div class="gantt-cell"><div class="gantt-bar" style="width:80%"></div></div>
-                        <div class="gantt-cell"></div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"><div class="gantt-bar review" style="width:70%"></div></div><div class="gantt-cell"><div class="gantt-bar" style="width:100%"></div></div><div class="gantt-cell"><div class="gantt-bar" style="width:100%"></div></div><div class="gantt-cell"><div class="gantt-bar" style="width:60%"></div></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
                     </div>
                 </div>
             </div>
-
             <div class="gantt-legend">
                 <div class="legend-item"><span class="legend-dot done-dot"></span> Completado</div>
                 <div class="legend-item"><span class="legend-dot"></span> En ejecución</div>
@@ -880,57 +995,11 @@ function projectWorkspace(name, division){
             </div>
         </div>
 
-        <div id="${id}-weekly" class="module">
-            <div class="item">
-                <h3>Informe Semanal #01</h3>
-                <small>Avance, tareas realizadas, fotos, incidencias y próximos pasos.</small><br>
-                <button class="btn">Ver informe</button>
-            </div>
-
-            <div class="item">
-                <h3>Informe Semanal #02</h3>
-                <small>Estado actualizado, puntos críticos, decisiones pendientes y evidencias.</small><br>
-                <button class="btn">Ver informe</button>
-            </div>
-        </div>
-
-        <div id="${id}-visits" class="module">
-            <div class="item">
-                <h3>Informe de visita / reunión</h3>
-                <small>Fecha: 17 Junio 2026 · Observaciones, acuerdos, responsables y próximos pasos.</small>
-            </div>
-
-            <div class="item">
-                <h3>Próxima visita</h3>
-                <small>Programada para revisión de avances y validación de entregables.</small>
-            </div>
-        </div>
-
-        <div id="${id}-changes" class="module">
-            <div class="item">
-                <h3>Cambio solicitado</h3>
-                <small>Impacto: +4 días · Costo estimado: US$1,200 · Estado: pendiente aprobación.</small><br>
-                <span class="status review">Pendiente</span>
-            </div>
-
-            <div class="item">
-                <h3>Ajuste aprobado</h3>
-                <small>Modificación menor documentada, aprobada y cerrada.</small><br>
-                <span class="status done">Aprobado</span>
-            </div>
-        </div>
-
-        <div id="${id}-docs" class="module">
-            <div class="item"><h3>Documento de alcance</h3><small>PDF · Entregado al cliente.</small></div>
-            <div class="item"><h3>Presupuesto / propuesta</h3><small>Documento comercial pendiente de firma.</small></div>
-            <div class="item"><h3>Entregables técnicos</h3><small>Archivos finales, planos, artes, reportes o prototipos según división.</small></div>
-        </div>
-
-        <div id="${id}-milestones" class="module">
-            <div class="item"><h3>Aprobación pendiente</h3><small>Cliente debe aprobar el último entregable para avanzar.</small></div>
-            <div class="item"><h3>Entrega parcial</h3><small>Programada para el próximo ciclo de trabajo.</small></div>
-            <div class="item"><h3>Cierre de fase</h3><small>Revisión ejecutiva y documentación final.</small></div>
-        </div>
+        <div id="${id}-weekly" class="module"><div class="item"><h3>Informe Semanal #01</h3><small>Avance, tareas realizadas, fotos, incidencias y próximos pasos.</small><br><button class="btn">Ver informe</button></div></div>
+        <div id="${id}-visits" class="module"><div class="item"><h3>Informe de visita / reunión</h3><small>Fecha: 17 Junio 2026 · Observaciones, acuerdos, responsables y próximos pasos.</small></div></div>
+        <div id="${id}-changes" class="module"><div class="item"><h3>Cambio solicitado</h3><small>Impacto: +4 días · Costo estimado: US$1,200 · Estado: pendiente aprobación.</small><br><span class="status review">Pendiente</span></div></div>
+        <div id="${id}-docs" class="module"><div class="item"><h3>Documento de alcance</h3><small>PDF · Entregado al cliente.</small></div></div>
+        <div id="${id}-milestones" class="module"><div class="item"><h3>Aprobación pendiente</h3><small>Cliente debe aprobar el último entregable para avanzar.</small></div></div>
     </div>`;
 }
 
