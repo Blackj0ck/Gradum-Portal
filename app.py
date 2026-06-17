@@ -533,12 +533,145 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 
 .doc-card small{color:var(--muted)}
 
+.planning-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+    margin-top:14px;
+}
+
+.plan-card{
+    background:rgba(7,9,12,.50);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:18px;
+}
+
+.plan-card h3{
+    font-size:15px;
+    font-weight:500;
+    margin-bottom:8px;
+}
+
+.plan-value{
+    font-size:26px;
+    color:var(--gold2);
+    margin:8px 0;
+}
+
+.variance-good{color:var(--green)!important}
+.variance-risk{color:var(--red)!important}
+
+.forecast-line{
+    height:180px;
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:18px;
+    background:
+        linear-gradient(to top,rgba(255,255,255,.04) 1px,transparent 1px),
+        rgba(255,255,255,.018);
+    background-size:100% 36px;
+    display:flex;
+    align-items:flex-end;
+    gap:12px;
+    margin-top:14px;
+}
+
+.forecast-bar{
+    flex:1;
+    border-radius:10px 10px 0 0;
+    background:linear-gradient(180deg,var(--gold2),rgba(200,173,106,.35));
+    position:relative;
+}
+
+.forecast-bar span{
+    position:absolute;
+    bottom:-24px;
+    left:50%;
+    transform:translateX(-50%);
+    color:var(--muted);
+    font-size:11px;
+}
+
+.scenario-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+}
+
+.scenario-card{
+    background:rgba(7,9,12,.50);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:20px;
+}
+
+.scenario-card h3{
+    font-size:18px;
+    font-weight:500;
+    margin-bottom:12px;
+}
+
+.scenario-card strong{
+    color:var(--gold2);
+    font-size:30px;
+    font-weight:500;
+}
+
+.close-list{
+    display:grid;
+    gap:12px;
+}
+
+.close-row{
+    display:grid;
+    grid-template-columns:1.5fr .8fr .8fr;
+    gap:12px;
+    align-items:center;
+    background:rgba(7,9,12,.50);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:16px;
+}
+
+.alert-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+}
+
+.alert-card{
+    background:rgba(7,9,12,.50);
+    border:1px solid var(--line);
+    border-left:3px solid var(--red);
+    border-radius:18px;
+    padding:18px;
+}
+
+.alert-card.medium{border-left-color:var(--gold)}
+.alert-card.low{border-left-color:var(--green)}
+
+.report-box{
+    background:rgba(7,9,12,.55);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:24px;
+    line-height:1.8;
+    color:var(--muted);
+}
+
+.report-box strong{
+    color:var(--text);
+    font-weight:500;
+}
+
 @media(max-width:1000px){
     body{display:block}
     .sidebar{width:100%;height:auto;position:relative}
     .main{margin-left:0;width:100%;padding:22px}
-    .grid4,.grid3,.timeline-summary,.cashflow,.document-grid{grid-template-columns:1fr}
+    .grid4,.grid3,.timeline-summary,.cashflow,.document-grid,.planning-grid,.scenario-grid,.alert-grid{grid-template-columns:1fr}
     .grid2{grid-template-columns:1fr}
+    .close-row{grid-template-columns:1fr}
     .visual-timeline{grid-template-columns:1fr;gap:14px}
     .timeline-step{border-radius:20px!important}
     .line{display:none}
@@ -643,7 +776,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
             <div>
                 <div class="eyebrow">Finance Operations</div>
                 <h3>Contabilidad</h3>
-                <p>Financial Control Center, estados financieros, cash flow, impuestos y documentos contables.</p>
+                <p>Financial Control Center, FP&A, budget vs actual, forecast, escenarios, impuestos y cierre mensual.</p>
             </div>
             <span class="status progress">Open Finance Dashboard</span>
         </div>
@@ -795,15 +928,22 @@ function financeDashboard(clientName){
     <div class="panel" style="margin-top:22px">
         <div class="eyebrow">Financial Control Center</div>
         <h2>Contabilidad & Finanzas · ${clientName}</h2>
-        <p>Dashboard financiero para monitorear ingresos, gastos, utilidad, flujo de caja, cuentas por cobrar, cuentas por pagar, impuestos y documentos contables.</p>
+        <p>Financial Control Center inspirado en flujos FP&A/EPM: dashboard financiero, budget vs actual, forecast, escenarios, cash flow, impuestos, cierre mensual, consolidación y reporte ejecutivo.</p>
 
         <div class="tabs">
             <button class="active" onclick="showModule('finance-summary', this)">Resumen Financiero</button>
+            <button onclick="showModule('finance-budget', this)">Budget vs Actual</button>
+            <button onclick="showModule('finance-forecast', this)">Forecast</button>
+            <button onclick="showModule('finance-scenarios', this)">Escenarios</button>
             <button onclick="showModule('finance-income', this)">Estado de Resultados</button>
             <button onclick="showModule('finance-cashflow', this)">Cash Flow</button>
             <button onclick="showModule('finance-arap', this)">CxC / CxP</button>
             <button onclick="showModule('finance-taxes', this)">Impuestos</button>
             <button onclick="showModule('finance-kpis', this)">KPIs Financieros</button>
+            <button onclick="showModule('finance-close', this)">Cierre Mensual</button>
+            <button onclick="showModule('finance-consolidation', this)">Consolidación</button>
+            <button onclick="showModule('finance-alerts', this)">Alertas</button>
+            <button onclick="showModule('finance-report', this)">Reporte Ejecutivo</button>
             <button onclick="showModule('finance-docs', this)">Documentos</button>
         </div>
 
@@ -823,6 +963,83 @@ function financeDashboard(clientName){
             <div class="item">
                 <h3>Lectura ejecutiva</h3>
                 <small>El período muestra una posición saludable, con margen positivo, flujo de caja estable y obligaciones fiscales bajo control. Se recomienda dar seguimiento a facturas vencidas y pagos programados.</small>
+            </div>
+        </div>
+
+
+        <div id="finance-budget" class="module">
+            <div class="item">
+                <h3>Budget vs Actual</h3>
+                <small>Comparación entre presupuesto aprobado, ejecución real y variación para detectar desviaciones.</small>
+            </div>
+
+            <div class="planning-grid">
+                <div class="plan-card"><h3>Ingresos</h3><div class="plan-value">+RD$180K</div><small>Real sobre presupuesto</small><p class="variance-good">+8.1%</p></div>
+                <div class="plan-card"><h3>Costos Directos</h3><div class="plan-value">+RD$65K</div><small>Sobre presupuesto</small><p class="variance-risk">+7.6%</p></div>
+                <div class="plan-card"><h3>Gastos Operativos</h3><div class="plan-value">-RD$22K</div><small>Debajo del presupuesto</small><p class="variance-good">-4.0%</p></div>
+                <div class="plan-card"><h3>Utilidad Neta</h3><div class="plan-value">+RD$95K</div><small>Mejor que plan</small><p class="variance-good">+13.1%</p></div>
+            </div>
+
+            <table class="finance-table" style="margin-top:22px">
+                <thead><tr><th>Partida</th><th>Presupuesto</th><th>Actual</th><th>Variación</th><th>Estado</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Ingresos</strong></td><td>RD$2,220,000</td><td>RD$2,400,000</td><td class="trend-up">+RD$180,000</td><td><span class="status done">Favorable</span></td></tr>
+                    <tr><td><strong>Costos Directos</strong></td><td>RD$855,000</td><td>RD$920,000</td><td class="trend-down">+RD$65,000</td><td><span class="status review">Atención</span></td></tr>
+                    <tr><td><strong>Gastos Operativos</strong></td><td>RD$552,000</td><td>RD$530,000</td><td class="trend-up">-RD$22,000</td><td><span class="status done">Controlado</span></td></tr>
+                    <tr><td><strong>Utilidad Neta</strong></td><td>RD$725,000</td><td>RD$820,000</td><td class="trend-up">+RD$95,000</td><td><span class="status done">Favorable</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="finance-forecast" class="module">
+            <div class="item">
+                <h3>Forecast Financiero</h3>
+                <small>Proyección de ingresos, gastos, utilidad neta y caja para los próximos meses.</small>
+            </div>
+
+            <div class="grid3">
+                <div class="widget"><h3>Revenue Forecast</h3><strong>RD$15.8M</strong><p>Proyección próximos 6 meses.</p></div>
+                <div class="widget"><h3>Cash Forecast</h3><strong>RD$4.2M</strong><p>Caja estimada al cierre.</p></div>
+                <div class="widget"><h3>Net Profit Forecast</h3><strong>RD$5.1M</strong><p>Utilidad neta proyectada.</p></div>
+            </div>
+
+            <div class="forecast-line">
+                <div class="forecast-bar" style="height:55%"><span>Jul</span></div>
+                <div class="forecast-bar" style="height:62%"><span>Ago</span></div>
+                <div class="forecast-bar" style="height:68%"><span>Sep</span></div>
+                <div class="forecast-bar" style="height:74%"><span>Oct</span></div>
+                <div class="forecast-bar" style="height:82%"><span>Nov</span></div>
+                <div class="forecast-bar" style="height:88%"><span>Dic</span></div>
+            </div>
+        </div>
+
+        <div id="finance-scenarios" class="module">
+            <div class="item">
+                <h3>Scenario Planning</h3>
+                <small>Comparación de escenarios conservador, base y optimista para anticipar impactos en utilidad y caja.</small>
+            </div>
+
+            <div class="scenario-grid">
+                <div class="scenario-card">
+                    <h3>Conservador</h3>
+                    <strong>RD$620K</strong>
+                    <p>Utilidad neta esperada con menor crecimiento y cobros más lentos.</p>
+                    <span class="status review">Riesgo medio</span>
+                </div>
+
+                <div class="scenario-card">
+                    <h3>Base</h3>
+                    <strong>RD$820K</strong>
+                    <p>Escenario actual con ejecución estable y margen positivo.</p>
+                    <span class="status progress">Escenario activo</span>
+                </div>
+
+                <div class="scenario-card">
+                    <h3>Optimista</h3>
+                    <strong>RD$1.05M</strong>
+                    <p>Mayor facturación, mejor cobranza y control operativo.</p>
+                    <span class="status done">Alto potencial</span>
+                </div>
             </div>
         </div>
 
@@ -909,6 +1126,70 @@ function financeDashboard(clientName){
                 <div class="widget"><h3>DSO</h3><strong>28d</strong><p>Días promedio de cobro.</p></div>
                 <div class="widget"><h3>Endeudamiento</h3><strong>22%</strong><p>Pasivos sobre activos.</p></div>
                 <div class="widget"><h3>Burn Rate</h3><strong>RD$530K</strong><p>Gasto operativo mensual.</p></div>
+            </div>
+        </div>
+
+
+        <div id="finance-close" class="module">
+            <div class="item">
+                <h3>Cierre Mensual</h3>
+                <small>Checklist operativo para controlar el cierre contable, fiscal y financiero.</small>
+            </div>
+
+            <div class="close-list">
+                <div class="close-row"><div><strong>Conciliación bancaria</strong><br><small>Validación de movimientos y balances.</small></div><span class="status done">Completado</span><small>18 Jun</small></div>
+                <div class="close-row"><div><strong>Facturas emitidas y recibidas</strong><br><small>Revisión de NCF, soportes y registros.</small></div><span class="status progress">En proceso</span><small>20 Jun</small></div>
+                <div class="close-row"><div><strong>ITBIS y retenciones</strong><br><small>Preparación de obligaciones fiscales.</small></div><span class="status review">Pendiente</span><small>20 Jun</small></div>
+                <div class="close-row"><div><strong>Estados financieros</strong><br><small>Generación de reportes para dirección.</small></div><span class="status review">Pendiente</span><small>25 Jun</small></div>
+            </div>
+        </div>
+
+        <div id="finance-consolidation" class="module">
+            <div class="item">
+                <h3>Consolidación Financiera</h3>
+                <small>Vista resumida por división para entender desempeño financiero del ecosistema Gradum.</small>
+            </div>
+
+            <table class="finance-table">
+                <thead><tr><th>División</th><th>Ingresos</th><th>Gastos</th><th>Utilidad</th><th>Margen</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Services</strong></td><td>RD$2.4M</td><td>RD$1.6M</td><td>RD$820K</td><td class="trend-up">34%</td></tr>
+                    <tr><td><strong>Construction</strong></td><td>RD$8.9M</td><td>RD$7.1M</td><td>RD$1.8M</td><td class="trend-up">20%</td></tr>
+                    <tr><td><strong>Consulting</strong></td><td>RD$1.7M</td><td>RD$820K</td><td>RD$880K</td><td class="trend-up">52%</td></tr>
+                    <tr><td><strong>Ventures</strong></td><td>RD$450K</td><td>RD$620K</td><td>-RD$170K</td><td class="trend-down">Inversión</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="finance-alerts" class="module">
+            <div class="alert-grid">
+                <div class="alert-card">
+                    <h3>Factura vencida</h3>
+                    <small>Cliente B tiene RD$185,000 vencidos desde hace 12 días.</small><br>
+                    <span class="status danger">Alta prioridad</span>
+                </div>
+                <div class="alert-card medium">
+                    <h3>ITBIS próximo</h3>
+                    <small>Fecha límite fiscal cercana. Validar comprobantes y retenciones.</small><br>
+                    <span class="status review">Media</span>
+                </div>
+                <div class="alert-card low">
+                    <h3>Margen saludable</h3>
+                    <small>Margen neto actual por encima del escenario base.</small><br>
+                    <span class="status done">Positivo</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="finance-report" class="module">
+            <div class="report-box">
+                <h3 style="color:var(--text);margin-bottom:12px">Reporte Ejecutivo Automático</h3>
+                <p>
+                    Durante el período actual, <strong>los ingresos alcanzaron RD$2.4M</strong>, representando un crecimiento de <strong>17.1%</strong> frente al período anterior.
+                    La utilidad neta se ubicó en <strong>RD$820K</strong>, con un margen neto aproximado de <strong>34%</strong>.
+                    El flujo de caja se mantiene positivo, con una proyección neta de <strong>RD$800K</strong>.
+                    Se recomienda priorizar la gestión de cobro de facturas vencidas, validar el cierre fiscal antes del día 20 y mantener seguimiento al presupuesto de costos directos.
+                </p>
             </div>
         </div>
 
