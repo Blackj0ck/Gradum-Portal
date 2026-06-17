@@ -665,11 +665,212 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     font-weight:500;
 }
 
+
+/* CONSTRUCTION LIVE DASHBOARD */
+.live-grid{
+    display:grid;
+    grid-template-columns:1.4fr .9fr;
+    gap:18px;
+    margin-bottom:22px;
+}
+
+.activity-feed{
+    display:grid;
+    gap:12px;
+}
+
+.activity-row{
+    display:grid;
+    grid-template-columns:86px 1fr;
+    gap:14px;
+    align-items:flex-start;
+    background:rgba(7,9,12,.55);
+    border:1px solid var(--line);
+    border-left:3px solid var(--gold);
+    border-radius:16px;
+    padding:16px;
+}
+
+.activity-time{
+    color:var(--gold);
+    font-size:12px;
+    letter-spacing:.8px;
+    text-transform:uppercase;
+}
+
+.stage-list{
+    display:grid;
+    gap:14px;
+}
+
+.stage-row{
+    background:rgba(7,9,12,.50);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:16px;
+}
+
+.stage-head{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:10px;
+}
+
+.stage-head span{
+    color:var(--muted);
+    font-size:13px;
+}
+
+.evidence-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+}
+
+.evidence-card{
+    background:rgba(7,9,12,.55);
+    border:1px solid var(--line);
+    border-radius:18px;
+    overflow:hidden;
+}
+
+.evidence-thumb{
+    height:130px;
+    background:
+        linear-gradient(135deg,rgba(200,173,106,.25),rgba(255,255,255,.04)),
+        radial-gradient(circle at center,rgba(255,255,255,.08),transparent 40%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--gold2);
+    font-size:34px;
+}
+
+.evidence-body{
+    padding:16px;
+}
+
+.next-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+}
+
+.next-card{
+    background:rgba(7,9,12,.50);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:18px;
+}
+
+.next-card h3{
+    font-size:15px;
+    font-weight:500;
+    margin-bottom:8px;
+}
+
+.compare-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+}
+
+.compare-box{
+    border:1px solid var(--line);
+    border-radius:20px;
+    overflow:hidden;
+    background:rgba(7,9,12,.50);
+}
+
+.compare-image{
+    height:220px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+        linear-gradient(135deg,rgba(200,173,106,.20),rgba(255,255,255,.035)),
+        repeating-linear-gradient(45deg,rgba(255,255,255,.03) 0 8px,transparent 8px 16px);
+    font-size:42px;
+    color:var(--gold2);
+}
+
+.compare-box h3{
+    padding:16px 16px 4px;
+    font-size:18px;
+    font-weight:500;
+}
+
+.compare-box small{
+    display:block;
+    padding:0 16px 16px;
+}
+
+.weather-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+}
+
+.weather-card{
+    background:rgba(7,9,12,.50);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:22px;
+}
+
+.weather-temp{
+    font-size:46px;
+    color:var(--gold2);
+    margin:10px 0;
+}
+
+.traffic-grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:14px;
+}
+
+.traffic-card{
+    background:rgba(7,9,12,.50);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:18px;
+}
+
+.traffic-dot{
+    width:14px;
+    height:14px;
+    border-radius:50%;
+    display:inline-block;
+    margin-right:8px;
+    background:var(--green);
+}
+
+.traffic-dot.yellow{background:var(--gold)}
+.traffic-dot.red{background:var(--red)}
+
+.milestone-hero{
+    background:
+        linear-gradient(135deg,rgba(200,173,106,.14),rgba(255,255,255,.02)),
+        rgba(7,9,12,.50);
+    border:1px solid rgba(200,173,106,.30);
+    border-radius:24px;
+    padding:28px;
+}
+
+.milestone-hero h3{
+    font-size:26px;
+    font-weight:500;
+    margin-bottom:10px;
+}
+
+
 @media(max-width:1000px){
     body{display:block}
     .sidebar{width:100%;height:auto;position:relative}
     .main{margin-left:0;width:100%;padding:22px}
-    .grid4,.grid3,.timeline-summary,.cashflow,.document-grid,.planning-grid,.scenario-grid,.alert-grid{grid-template-columns:1fr}
+    .grid4,.grid3,.timeline-summary,.cashflow,.document-grid,.planning-grid,.scenario-grid,.alert-grid,.live-grid,.evidence-grid,.next-grid,.compare-grid,.weather-grid,.traffic-grid{grid-template-columns:1fr}
     .grid2{grid-template-columns:1fr}
     .close-row{grid-template-columns:1fr}
     .visual-timeline{grid-template-columns:1fr;gap:14px}
@@ -798,8 +999,8 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 <div id="construction" class="section">
     <div class="hero">
         <div class="eyebrow">Gradum Construction</div>
-        <h2>Built environment delivery with executive visibility.</h2>
-        <p>Arquitectura e ingeniería funcionan como componentes del flujo constructivo: diseño, planos, presupuesto, ejecución, supervisión y entrega.</p>
+        <h2>Built environment delivery with live project visibility.</h2>
+        <p>Portal de obra para visualizar avance, evidencias, bitácora, cronograma, hitos, visitas, cambios y documentación del proyecto.</p>
     </div>
 
     <div class="grid3">
@@ -1219,6 +1420,15 @@ function projectWorkspace(name, division){
 
         <div class="tabs">
             <button class="active" onclick="showModule('${id}-dashboard', this)">Dashboard Ejecutivo</button>
+            ${division === 'construction' ? `
+                <button onclick="showModule('${id}-live', this)">Obra en Vivo</button>
+                <button onclick="showModule('${id}-evidence', this)">Evidencias</button>
+                <button onclick="showModule('${id}-progressmap', this)">Mapa de Avance</button>
+                <button onclick="showModule('${id}-next7', this)">Próximos 7 Días</button>
+                <button onclick="showModule('${id}-compare', this)">Diseño vs Actual</button>
+                <button onclick="showModule('${id}-weather', this)">Clima</button>
+                <button onclick="showModule('${id}-health', this)">Semáforo</button>
+            ` : ``}
             <button onclick="showModule('${id}-timeline', this)">Cronograma por Fases</button>
             <button onclick="showModule('${id}-gantt', this)">Gantt de Proyectos</button>
             <button onclick="showModule('${id}-weekly', this)">Informes Semanales</button>
@@ -1236,6 +1446,130 @@ function projectWorkspace(name, division){
             </div>
             <div class="item"><h3>Executive Summary</h3><small>El proyecto avanza conforme al plan. Existen documentos pendientes de aprobación, un cambio en revisión y próximos hitos programados para cierre de fase.</small></div>
         </div>
+
+
+        ${division === 'construction' ? `
+        <div id="${id}-live" class="module">
+            <div class="live-grid">
+                <div class="panel">
+                    <div class="eyebrow">Live Activity Feed</div>
+                    <h2>Actividad reciente de obra</h2>
+                    <p>Bitácora ejecutiva para que el cliente vea movimientos recientes del proyecto.</p>
+
+                    <div class="activity-feed" style="margin-top:18px">
+                        <div class="activity-row"><div class="activity-time">Hoy · 9:15</div><div><h3>Armado de acero completado</h3><small>Equipo estructural completó armado en zona de columnas principales.</small></div></div>
+                        <div class="activity-row"><div class="activity-time">Hoy · 11:40</div><div><h3>Llegada de materiales</h3><small>Recepción de cemento, acero y agregados para próxima actividad.</small></div></div>
+                        <div class="activity-row"><div class="activity-time">Hoy · 3:20</div><div><h3>Supervisión técnica realizada</h3><small>Revisión de alineación, seguridad y avance físico del frente activo.</small></div></div>
+                        <div class="activity-row"><div class="activity-time">Ayer · 4:10</div><div><h3>Área liberada para próxima fase</h3><small>Zona preparada para inicio de mampostería y trabajos complementarios.</small></div></div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="eyebrow">Milestone</div>
+                    <div class="milestone-hero">
+                        <h3>🏆 Hito alcanzado</h3>
+                        <p>Cimentación completada y validada por supervisión técnica.</p>
+                        <span class="status done">Completado · 12 Jun</span>
+                    </div>
+
+                    <div class="item" style="margin-top:16px">
+                        <h3>Próximo hito</h3>
+                        <small>Inicio de mampostería y cierre de fase estructural parcial.</small><br>
+                        <span class="status progress">Programado</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="${id}-evidence" class="module">
+            <div class="item">
+                <h3>Centro de Evidencias</h3>
+                <small>Fotos, videos y registros visuales organizados por semana para documentar el avance real.</small>
+            </div>
+
+            <div class="evidence-grid">
+                <div class="evidence-card"><div class="evidence-thumb">📷</div><div class="evidence-body"><h3>Semana 1</h3><small>24 fotos · 2 videos · Excavación e inicio de obra.</small><br><span class="status done">Ver evidencias</span></div></div>
+                <div class="evidence-card"><div class="evidence-thumb">🎥</div><div class="evidence-body"><h3>Semana 2</h3><small>31 fotos · 1 video · Cimentación y acero.</small><br><span class="status done">Ver evidencias</span></div></div>
+                <div class="evidence-card"><div class="evidence-thumb">📸</div><div class="evidence-body"><h3>Semana 3</h3><small>18 fotos · 4 videos · Muros y preparación.</small><br><span class="status progress">Actualizado hoy</span></div></div>
+            </div>
+        </div>
+
+        <div id="${id}-progressmap" class="module">
+            <div class="item">
+                <h3>Mapa de Avance por Etapas</h3>
+                <small>Visualización clara del avance físico por componente de obra.</small>
+            </div>
+
+            <div class="stage-list">
+                <div class="stage-row"><div class="stage-head"><h3>Cimentación</h3><span>100%</span></div><div class="bar"><div class="fill" style="width:100%"></div></div><span class="status done">Completado</span></div>
+                <div class="stage-row"><div class="stage-head"><h3>Estructura</h3><span>80%</span></div><div class="bar"><div class="fill" style="width:80%"></div></div><span class="status progress">En progreso</span></div>
+                <div class="stage-row"><div class="stage-head"><h3>Mampostería</h3><span>50%</span></div><div class="bar"><div class="fill" style="width:50%"></div></div><span class="status progress">Activo</span></div>
+                <div class="stage-row"><div class="stage-head"><h3>Instalaciones</h3><span>20%</span></div><div class="bar"><div class="fill" style="width:20%"></div></div><span class="status review">Inicial</span></div>
+                <div class="stage-row"><div class="stage-head"><h3>Terminaciones</h3><span>0%</span></div><div class="bar"><div class="fill" style="width:0%"></div></div><span class="status review">Pendiente</span></div>
+            </div>
+        </div>
+
+        <div id="${id}-next7" class="module">
+            <div class="item">
+                <h3>Próximos 7 días</h3>
+                <small>Plan inmediato de obra para dar visibilidad al cliente sobre lo que ocurrirá en el corto plazo.</small>
+            </div>
+
+            <div class="next-grid">
+                <div class="next-card"><div class="eyebrow">17 Jun</div><h3>Colado de columnas</h3><small>Actividad estructural programada.</small><br><span class="status progress">Programado</span></div>
+                <div class="next-card"><div class="eyebrow">19 Jun</div><h3>Inicio de mampostería</h3><small>Primer frente de muros interiores.</small><br><span class="status review">Por iniciar</span></div>
+                <div class="next-card"><div class="eyebrow">21 Jun</div><h3>Inspección técnica</h3><small>Revisión de calidad y seguridad.</small><br><span class="status progress">Confirmado</span></div>
+                <div class="next-card"><div class="eyebrow">24 Jun</div><h3>Entrega de materiales</h3><small>Recepción de blocks y agregados.</small><br><span class="status review">Pendiente</span></div>
+            </div>
+        </div>
+
+        <div id="${id}-compare" class="module">
+            <div class="item">
+                <h3>Diseño Original vs Estado Actual</h3>
+                <small>Comparación visual para que el cliente entienda la relación entre lo planificado y lo ejecutado.</small>
+            </div>
+
+            <div class="compare-grid">
+                <div class="compare-box"><div class="compare-image">🏗️</div><h3>Diseño / Render</h3><small>Referencia visual aprobada para ejecución.</small></div>
+                <div class="compare-box"><div class="compare-image">📷</div><h3>Estado Actual</h3><small>Registro fotográfico más reciente de la obra.</small></div>
+            </div>
+        </div>
+
+        <div id="${id}-weather" class="module">
+            <div class="weather-grid">
+                <div class="weather-card">
+                    <div class="eyebrow">Condiciones de obra</div>
+                    <h3>Clima actual</h3>
+                    <div class="weather-temp">30°C</div>
+                    <p>Soleado · Viento 8 km/h · Probabilidad de lluvia baja.</p>
+                    <span class="status done">Impacto normal</span>
+                </div>
+
+                <div class="weather-card">
+                    <div class="eyebrow">Impacto operativo</div>
+                    <h3>Evaluación del día</h3>
+                    <p>Las condiciones permiten continuar actividades exteriores y trabajos de estructura sin impacto relevante en cronograma.</p>
+                    <div class="bar"><div class="fill" style="width:88%"></div></div>
+                    <span class="status done">Operación estable</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="${id}-health" class="module">
+            <div class="item">
+                <h3>Semáforo del Proyecto</h3>
+                <small>Lectura ejecutiva rápida sobre el estado general de obra.</small>
+            </div>
+
+            <div class="traffic-grid">
+                <div class="traffic-card"><h3><span class="traffic-dot"></span>Cronograma</h3><small>Dentro del plan.</small></div>
+                <div class="traffic-card"><h3><span class="traffic-dot"></span>Presupuesto</h3><small>Sin desviaciones críticas.</small></div>
+                <div class="traffic-card"><h3><span class="traffic-dot"></span>Calidad</h3><small>Validaciones conformes.</small></div>
+                <div class="traffic-card"><h3><span class="traffic-dot yellow"></span>Riesgos</h3><small>Materiales en seguimiento.</small></div>
+                <div class="traffic-card"><h3><span class="traffic-dot"></span>Seguridad</h3><small>Sin incidentes reportados.</small></div>
+            </div>
+        </div>
+        ` : ``}
 
         <div id="${id}-timeline" class="module">
             <div class="visual-timeline">
