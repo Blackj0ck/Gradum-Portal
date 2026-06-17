@@ -1,5 +1,4 @@
 from flask import Flask, render_template_string
-import webbrowser, threading, time
 
 app = Flask(__name__)
 
@@ -52,7 +51,6 @@ h1{font-size:38px;font-weight:600}
 .btn{padding:12px 16px;border:1px solid #b8a77a;background:transparent;color:#f5f1e8;border-radius:8px;cursor:pointer;margin-top:14px}
 .btn:hover{background:#b8a77a;color:#080b0f}
 
-/* CRONOGRAMA VISUAL */
 .visual-timeline{
     display:grid;
     grid-template-columns:repeat(5,1fr);
@@ -571,10 +569,5 @@ function showModule(moduleId, button){
 def home():
     return render_template_string(HTML)
 
-def open_browser():
-    time.sleep(1)
-    webbrowser.open("http://127.0.0.1:5000")
-
 if __name__ == "__main__":
-    threading.Thread(target=open_browser).start()
     app.run(debug=False)
