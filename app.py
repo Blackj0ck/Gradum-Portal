@@ -12,25 +12,25 @@ HTML = """
 
 <style>
 :root{
-    --bg:#07090c;
-    --panel:#0d1117;
-    --panel2:#111821;
-    --line:#232832;
-    --text:#f4efe3;
-    --muted:#9b9b93;
-    --gold:#c8ad6a;
-    --gold2:#e0c987;
-    --green:#85d49a;
-    --red:#d98c8c;
-    --blue:#8ca6d9;
+    --bg:#0a1f1a;
+    --panel:#0e2620;
+    --panel2:#123028;
+    --line:#1f3a32;
+    --text:#eaf6e6;
+    --muted:#88a89a;
+    --gold:#7be3a8;
+    --gold2:#bef576;
+    --green:#7be3a8;
+    --red:#ff8a8a;
+    --blue:#9bd4c4;
 }
 
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,Arial,sans-serif}
 
 body{
     background:
-        radial-gradient(circle at top right,rgba(200,173,106,.10),transparent 30%),
-        radial-gradient(circle at bottom left,rgba(70,90,120,.12),transparent 28%),
+        radial-gradient(circle at top right,rgba(190,245,118,.14),transparent 32%),
+        radial-gradient(circle at bottom left,rgba(123,227,168,.10),transparent 30%),
         var(--bg);
     color:var(--text);
     display:flex;
@@ -39,7 +39,7 @@ body{
 .sidebar{
     width:292px;
     height:100vh;
-    background:rgba(7,9,12,.92);
+    background:rgba(10,31,26,.92);
     border-right:1px solid var(--line);
     padding:34px 24px;
     position:fixed;
@@ -57,7 +57,7 @@ body{
 }
 
 .menu-label{
-    color:#676b72;
+    color:#6b8a7a;
     font-size:11px;
     letter-spacing:1.5px;
     text-transform:uppercase;
@@ -70,7 +70,7 @@ body{
     padding:14px 15px;
     margin-bottom:9px;
     background:transparent;
-    color:#b8b8b2;
+    color:#bcd4c6;
     border:1px solid transparent;
     border-radius:10px;
     text-align:left;
@@ -82,24 +82,24 @@ body{
 .menu button:hover,
 .menu button.active{
     color:var(--text);
-    border-color:rgba(200,173,106,.45);
-    background:linear-gradient(135deg,rgba(200,173,106,.10),rgba(255,255,255,.025));
+    border-color:rgba(123,227,168,.45);
+    background:linear-gradient(135deg,rgba(123,227,168,.10),rgba(255,255,255,.025));
 }
 
 .hamburger-btn{
     margin-top:16px;
-    border-color:rgba(200,173,106,.25)!important;
+    border-color:rgba(123,227,168,.25)!important;
 }
 
 .division-menu{
     display:none;
     margin-top:8px;
     padding-left:10px;
-    border-left:1px solid rgba(200,173,106,.25);
+    border-left:1px solid rgba(123,227,168,.25);
 }
 
 .division-menu.open{display:block}
-.division-menu button{font-size:13px;color:#9b9b93}
+.division-menu button{font-size:13px;color:#88a89a}
 
 .main{
     margin-left:292px;
@@ -128,14 +128,14 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     border:1px solid var(--line);
     padding:12px 18px;
     border-radius:999px;
-    color:#d7d0bf;
+    color:#d8ead2;
     background:rgba(255,255,255,.03);
 }
 
 .hero{
     background:
         linear-gradient(135deg,rgba(255,255,255,.045),rgba(255,255,255,.012)),
-        linear-gradient(120deg,#111821,#07090c);
+        linear-gradient(120deg,#123028,#0a1f1a);
     border:1px solid var(--line);
     border-radius:28px;
     padding:44px;
@@ -150,7 +150,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     width:240px;
     height:240px;
     border-radius:50%;
-    background:rgba(200,173,106,.06);
+    background:rgba(123,227,168,.06);
     right:-90px;
     top:-90px;
     filter:blur(8px);
@@ -166,7 +166,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 }
 
 .hero p{
-    color:#aaa79f;
+    color:#a3c3b3;
     line-height:1.8;
     max-width:700px;
     font-size:15px;
@@ -198,8 +198,8 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 
 .card:hover{
     transform:translateY(-6px);
-    border-color:rgba(200,173,106,.48);
-    background:linear-gradient(180deg,rgba(200,173,106,.07),rgba(255,255,255,.015));
+    border-color:rgba(123,227,168,.48);
+    background:linear-gradient(180deg,rgba(123,227,168,.07),rgba(255,255,255,.015));
 }
 
 .card h3,.widget h3,.panel h2{font-weight:500;margin-bottom:10px}
@@ -222,7 +222,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 }
 
 .item{
-    background:rgba(7,9,12,.55);
+    background:rgba(10,31,26,.55);
     border:1px solid var(--line);
     border-left:3px solid var(--gold);
     padding:17px;
@@ -231,7 +231,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     transition:.25s;
 }
 
-.item:hover{border-color:rgba(200,173,106,.45)}
+.item:hover{border-color:rgba(123,227,168,.45)}
 .item h3{font-size:17px;margin-bottom:6px;font-weight:500}
 
 .status{
@@ -244,10 +244,10 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     text-transform:uppercase;
 }
 
-.progress{background:rgba(200,173,106,.12);color:var(--gold2)}
-.review{background:rgba(255,255,255,.08);color:#e5ded0}
-.done{background:rgba(133,212,154,.12);color:var(--green)}
-.danger{background:rgba(217,140,140,.12);color:var(--red)}
+.progress{background:rgba(123,227,168,.12);color:var(--gold2)}
+.review{background:rgba(255,255,255,.08);color:#e3f0d8}
+.done{background:rgba(123,227,168,.12);color:var(--green)}
+.danger{background:rgba(255,138,138,.12);color:var(--red)}
 
 .tabs{
     display:flex;
@@ -260,7 +260,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     padding:11px 14px;
     border:1px solid var(--line);
     background:rgba(255,255,255,.025);
-    color:#d6d1c4;
+    color:#d2e6cf;
     border-radius:999px;
     cursor:pointer;
     transition:.25s;
@@ -268,8 +268,8 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 
 .tabs button:hover,
 .tabs button.active{
-    border-color:rgba(200,173,106,.7);
-    background:rgba(200,173,106,.12);
+    border-color:rgba(123,227,168,.7);
+    background:rgba(123,227,168,.12);
     color:var(--text);
 }
 
@@ -278,7 +278,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 
 .bar{
     height:8px;
-    background:#202833;
+    background:#1a3a30;
     border-radius:999px;
     margin-top:14px;
     overflow:hidden;
@@ -297,7 +297,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     transition:.25s;
 }
 
-.btn:hover{background:var(--gold);color:#07090c}
+.btn:hover{background:var(--gold);color:#0a1f1a}
 
 .visual-timeline{
     display:grid;
@@ -337,7 +337,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     left:58px;
     right:-22px;
     height:2px;
-    background:#343b47;
+    background:#2c4a40;
     z-index:1;
 }
 
@@ -348,15 +348,15 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 .completed .circle,
 .active-step .circle{
     background:var(--gold);
-    color:#07090c;
+    color:#0a1f1a;
 }
 
 .active-step{
-    border-color:rgba(200,173,106,.7);
-    background:rgba(200,173,106,.08);
+    border-color:rgba(123,227,168,.7);
+    background:rgba(123,227,168,.08);
 }
 
-.active-step .circle{box-shadow:0 0 0 7px rgba(200,173,106,.13)}
+.active-step .circle{box-shadow:0 0 0 7px rgba(123,227,168,.13)}
 .pending .circle{color:var(--gold)}
 
 .timeline-summary{
@@ -414,11 +414,11 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     height:18px;
     border-radius:999px;
     background:linear-gradient(90deg,var(--gold),var(--gold2));
-    box-shadow:0 0 18px rgba(200,173,106,.16);
+    box-shadow:0 0 18px rgba(123,227,168,.16);
 }
 
-.gantt-bar.review{background:linear-gradient(90deg,#8f8f8a,#d7d0bf)}
-.gantt-bar.donebar{background:linear-gradient(90deg,#6eaf7d,#9be0aa)}
+.gantt-bar.review{background:linear-gradient(90deg,#7aa091,#d8ead2)}
+.gantt-bar.donebar{background:linear-gradient(90deg,#65c89a,#b6f0cc)}
 
 .gantt-legend{
     display:flex;
@@ -442,8 +442,8 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     background:var(--gold);
 }
 
-.legend-dot.review-dot{background:#d7d0bf}
-.legend-dot.done-dot{background:#9be0aa}
+.legend-dot.review-dot{background:#d8ead2}
+.legend-dot.done-dot{background:#b6f0cc}
 
 /* FINANCE DASHBOARD */
 .finance-table{
@@ -509,8 +509,8 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     border-radius:8px 8px 0 0;
 }
 
-.cash-in{background:linear-gradient(180deg,var(--green),rgba(133,212,154,.35))}
-.cash-out{background:linear-gradient(180deg,var(--red),rgba(217,140,140,.30))}
+.cash-in{background:linear-gradient(180deg,var(--green),rgba(123,227,168,.35))}
+.cash-out{background:linear-gradient(180deg,var(--red),rgba(255,138,138,.30))}
 
 .document-grid{
     display:grid;
@@ -519,7 +519,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 }
 
 .doc-card{
-    background:rgba(7,9,12,.50);
+    background:rgba(10,31,26,.50);
     border:1px solid var(--line);
     border-radius:18px;
     padding:18px;
@@ -541,7 +541,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 }
 
 .plan-card{
-    background:rgba(7,9,12,.50);
+    background:rgba(10,31,26,.50);
     border:1px solid var(--line);
     border-radius:18px;
     padding:18px;
@@ -580,7 +580,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 .forecast-bar{
     flex:1;
     border-radius:10px 10px 0 0;
-    background:linear-gradient(180deg,var(--gold2),rgba(200,173,106,.35));
+    background:linear-gradient(180deg,var(--gold2),rgba(123,227,168,.35));
     position:relative;
 }
 
@@ -600,7 +600,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 }
 
 .scenario-card{
-    background:rgba(7,9,12,.50);
+    background:rgba(10,31,26,.50);
     border:1px solid var(--line);
     border-radius:20px;
     padding:20px;
@@ -628,7 +628,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     grid-template-columns:1.5fr .8fr .8fr;
     gap:12px;
     align-items:center;
-    background:rgba(7,9,12,.50);
+    background:rgba(10,31,26,.50);
     border:1px solid var(--line);
     border-radius:16px;
     padding:16px;
@@ -641,7 +641,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 }
 
 .alert-card{
-    background:rgba(7,9,12,.50);
+    background:rgba(10,31,26,.50);
     border:1px solid var(--line);
     border-left:3px solid var(--red);
     border-radius:18px;
@@ -652,7 +652,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 .alert-card.low{border-left-color:var(--green)}
 
 .report-box{
-    background:rgba(7,9,12,.55);
+    background:rgba(10,31,26,.55);
     border:1px solid var(--line);
     border-radius:20px;
     padding:24px;
@@ -684,7 +684,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     grid-template-columns:86px 1fr;
     gap:14px;
     align-items:flex-start;
-    background:rgba(7,9,12,.55);
+    background:rgba(10,31,26,.55);
     border:1px solid var(--line);
     border-left:3px solid var(--gold);
     border-radius:16px;
@@ -704,7 +704,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 }
 
 .stage-row{
-    background:rgba(7,9,12,.50);
+    background:rgba(10,31,26,.50);
     border:1px solid var(--line);
     border-radius:16px;
     padding:16px;
@@ -729,7 +729,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 }
 
 .evidence-card{
-    background:rgba(7,9,12,.55);
+    background:rgba(10,31,26,.55);
     border:1px solid var(--line);
     border-radius:18px;
     overflow:hidden;
@@ -738,7 +738,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 .evidence-thumb{
     height:130px;
     background:
-        linear-gradient(135deg,rgba(200,173,106,.25),rgba(255,255,255,.04)),
+        linear-gradient(135deg,rgba(123,227,168,.25),rgba(255,255,255,.04)),
         radial-gradient(circle at center,rgba(255,255,255,.08),transparent 40%);
     display:flex;
     align-items:center;
@@ -758,7 +758,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 }
 
 .next-card{
-    background:rgba(7,9,12,.50);
+    background:rgba(10,31,26,.50);
     border:1px solid var(--line);
     border-radius:18px;
     padding:18px;
@@ -780,7 +780,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     border:1px solid var(--line);
     border-radius:20px;
     overflow:hidden;
-    background:rgba(7,9,12,.50);
+    background:rgba(10,31,26,.50);
 }
 
 .compare-image{
@@ -789,7 +789,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     align-items:center;
     justify-content:center;
     background:
-        linear-gradient(135deg,rgba(200,173,106,.20),rgba(255,255,255,.035)),
+        linear-gradient(135deg,rgba(123,227,168,.20),rgba(255,255,255,.035)),
         repeating-linear-gradient(45deg,rgba(255,255,255,.03) 0 8px,transparent 8px 16px);
     font-size:42px;
     color:var(--gold2);
@@ -813,7 +813,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 }
 
 .weather-card{
-    background:rgba(7,9,12,.50);
+    background:rgba(10,31,26,.50);
     border:1px solid var(--line);
     border-radius:20px;
     padding:22px;
@@ -832,7 +832,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 }
 
 .traffic-card{
-    background:rgba(7,9,12,.50);
+    background:rgba(10,31,26,.50);
     border:1px solid var(--line);
     border-radius:18px;
     padding:18px;
@@ -852,9 +852,9 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 
 .milestone-hero{
     background:
-        linear-gradient(135deg,rgba(200,173,106,.14),rgba(255,255,255,.02)),
-        rgba(7,9,12,.50);
-    border:1px solid rgba(200,173,106,.30);
+        linear-gradient(135deg,rgba(123,227,168,.14),rgba(255,255,255,.02)),
+        rgba(10,31,26,.50);
+    border:1px solid rgba(123,227,168,.30);
     border-radius:24px;
     padding:28px;
 }
@@ -872,7 +872,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     gap:18px;
 }
 .viewer-shell{
-    background:#05070a;
+    background:#05110e;
     border:1px solid var(--line);
     border-radius:24px;
     overflow:hidden;
@@ -895,15 +895,15 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
 }
 .viewer-actions button,
 .api-pill{
-    border:1px solid rgba(200,173,106,.32);
-    background:rgba(200,173,106,.06);
-    color:#d9cfad;
+    border:1px solid rgba(123,227,168,.32);
+    background:rgba(123,227,168,.06);
+    color:#d9f5de;
     border-radius:999px;
     padding:8px 11px;
     font-size:12px;
     cursor:pointer;
 }
-.viewer-actions button:hover{background:rgba(200,173,106,.15)}
+.viewer-actions button:hover{background:rgba(123,227,168,.15)}
 .viewer-canvas{
     height:440px;
     display:flex;
@@ -911,7 +911,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     justify-content:center;
     position:relative;
     background:
-        radial-gradient(circle at 55% 45%,rgba(200,173,106,.22),transparent 24%),
+        radial-gradient(circle at 55% 45%,rgba(123,227,168,.22),transparent 24%),
         linear-gradient(135deg,rgba(140,166,217,.10),rgba(255,255,255,.015)),
         repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 1px,transparent 1px 44px),
         repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 44px);
@@ -923,8 +923,8 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     transform:rotateX(58deg) rotateZ(-36deg);
     transform-style:preserve-3d;
     position:relative;
-    box-shadow:0 0 45px rgba(200,173,106,.16);
-    background:rgba(200,173,106,.035);
+    box-shadow:0 0 45px rgba(123,227,168,.16);
+    background:rgba(123,227,168,.035);
 }
 .model-box:before,
 .model-box:after{
@@ -943,7 +943,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     left:22px;
     color:var(--muted);
     font-size:12px;
-    background:rgba(7,9,12,.75);
+    background:rgba(10,31,26,.75);
     border:1px solid var(--line);
     border-radius:12px;
     padding:10px 12px;
@@ -953,7 +953,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     gap:14px;
 }
 .integration-card{
-    background:rgba(7,9,12,.50);
+    background:rgba(10,31,26,.50);
     border:1px solid var(--line);
     border-radius:20px;
     padding:18px;
@@ -964,11 +964,11 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     margin-bottom:8px;
 }
 .api-log{
-    background:rgba(7,9,12,.70);
+    background:rgba(10,31,26,.70);
     border:1px solid var(--line);
     border-radius:16px;
     padding:16px;
-    color:#bdb8aa;
+    color:#b9d7c9;
     font-family:Consolas,monospace;
     font-size:12px;
     line-height:1.7;
@@ -981,7 +981,7 @@ h1{font-size:42px;font-weight:500;letter-spacing:-1px}
     margin-top:16px;
 }
 .connector-card{
-    background:rgba(7,9,12,.50);
+    background:rgba(10,31,26,.50);
     border:1px solid var(--line);
     border-radius:18px;
     padding:18px;
