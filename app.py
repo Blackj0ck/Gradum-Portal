@@ -1,5 +1,4 @@
 from flask import Flask, render_template_string
-import webbrowser, threading, time
 
 app = Flask(__name__)
 
@@ -8,261 +7,647 @@ HTML = """
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Gradum OS SaaS</title>
+<title>Gradum OS · Client Portal</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+:root{
+    --bg:#071713;
+    --panel:#0b211b;
+    --panel2:#0f2a23;
+    --line:#1c3a31;
+    --text:#edf8ea;
+    --muted:#8eaa9c;
+    --accent:#7be3a8;
+    --accent2:#c8f57b;
+    --danger:#ff8a8a;
+    --soft:rgba(255,255,255,.035);
+}
+
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,Arial,sans-serif}
-body{background:#0b0f14;color:#f5f1e8;display:flex}
-.sidebar{width:285px;height:100vh;background:#080b0f;border-right:1px solid #252525;padding:30px 22px;position:fixed}
-.logo{font-size:30px;letter-spacing:2px;font-weight:700}
-.subtitle{color:#b8a77a;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;margin:8px 0 35px}
-.menu button{display:block;width:100%;padding:14px;margin-bottom:9px;background:transparent;color:#b8b8b8;border:1px solid transparent;border-radius:8px;text-align:left;cursor:pointer}
-.menu button:hover,.menu button.active{color:#f5f1e8;border-color:#b8a77a;background:rgba(184,167,122,.08)}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at top right,rgba(200,245,123,.12),transparent 32%),
+        radial-gradient(circle at bottom left,rgba(123,227,168,.10),transparent 30%),
+        var(--bg);
+    color:var(--text);
+    display:flex;
+}
+
+.sidebar{
+    width:280px;
+    height:100vh;
+    position:fixed;
+    padding:30px 22px;
+    border-right:1px solid var(--line);
+    background:rgba(7,23,19,.92);
+    backdrop-filter:blur(16px);
+}
+
+.logo{
+    font-size:30px;
+    letter-spacing:3px;
+    font-weight:700;
+}
+
+.subtitle{
+    margin:8px 0 36px;
+    color:var(--accent);
+    font-size:11px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+}
+
+.menu-label{
+    margin-bottom:12px;
+    color:#668475;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1.4px;
+}
+
+.menu button{
+    width:100%;
+    margin-bottom:8px;
+    padding:13px 14px;
+    border:1px solid transparent;
+    border-radius:12px;
+    background:transparent;
+    color:#c5dccf;
+    text-align:left;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.menu button:hover,
+.menu button.active{
+    color:var(--text);
+    border-color:rgba(123,227,168,.42);
+    background:rgba(123,227,168,.08);
+}
+
 .hamburger-btn{
     margin-top:12px;
-    border-color:rgba(184,167,122,.25)!important;
+    border-color:rgba(123,227,168,.24)!important;
 }
+
 .division-menu{
     display:none;
-    margin-top:8px;
     padding-left:10px;
-    border-left:1px solid rgba(184,167,122,.25);
+    margin-top:8px;
+    border-left:1px solid rgba(123,227,168,.22);
 }
+
 .division-menu.open{display:block}
-.division-menu button{
-    font-size:13px;
-    color:#b8b8b8;
-}
-.main{margin-left:285px;width:calc(100% - 285px);padding:36px}
-.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
-.eyebrow{color:#b8a77a;text-transform:uppercase;letter-spacing:2px;font-size:12px;margin-bottom:8px}
-h1{font-size:38px;font-weight:600}
-.user{border:1px solid #333;padding:12px 18px;border-radius:999px;color:#d6d1c4}
-.hero{background:linear-gradient(135deg,#111820,#080b0f);border:1px solid #252525;border-radius:22px;padding:30px;margin-bottom:24px}
-.hero h2{font-size:30px;font-weight:500;margin-bottom:12px}
-.hero p{color:#b8b8b8;line-height:1.7;max-width:950px}
-.section{display:none}.section.active{display:block}
-.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:22px}
-.grid2{display:grid;grid-template-columns:2fr 1fr;gap:22px}
-.card,.panel,.widget{background:#10151b;border:1px solid #242a31;border-radius:20px;padding:24px}
-.card{cursor:pointer;transition:.25s;border-left:4px solid #b8a77a}
-.card:hover{transform:translateY(-5px);border-color:#b8a77a}
-.card h3,.widget h3,.panel h2{font-weight:500;margin-bottom:10px}
-.card p,.widget p,.panel p, small{color:#a8a8a8;line-height:1.6}
-.widget strong{font-size:34px;color:#b8a77a}
-.item{background:#080b0f;border:1px solid #242a31;border-left:4px solid #b8a77a;padding:16px;border-radius:14px;margin-bottom:12px}
-.item h3{font-size:17px;margin-bottom:6px}
-.status{display:inline-block;margin-top:12px;padding:6px 12px;border-radius:999px;font-size:12px;text-transform:uppercase}
-.progress{background:rgba(184,167,122,.15);color:#d6c48f}
-.review{background:rgba(255,255,255,.1);color:#f5f1e8}
-.done{background:rgba(74,222,128,.12);color:#86efac}
-.tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}
-.tabs button{padding:11px 14px;border:1px solid #242a31;background:#10151b;color:#d6d1c4;border-radius:999px;cursor:pointer}
-.tabs button:hover,.tabs button.active{border-color:#b8a77a;background:rgba(184,167,122,.1);color:#f5f1e8}
-.module{display:none}.module.active{display:block}
-.bar{height:9px;background:#222b35;border-radius:999px;margin-top:12px;overflow:hidden}
-.fill{height:100%;background:#b8a77a}
-.btn{padding:12px 16px;border:1px solid #b8a77a;background:transparent;color:#f5f1e8;border-radius:8px;cursor:pointer;margin-top:14px}
-.btn:hover{background:#b8a77a;color:#080b0f}
+.division-menu button{font-size:13px;color:var(--muted)}
 
-/* CRONOGRAMA VISUAL */
-.visual-timeline{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:0;
-    margin-top:20px;
+.main{
+    margin-left:280px;
+    width:calc(100% - 280px);
+    padding:34px;
 }
 
-.timeline-step{
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:28px;
+}
+
+.eyebrow{
+    color:var(--accent);
+    text-transform:uppercase;
+    letter-spacing:2.3px;
+    font-size:11px;
+    margin-bottom:9px;
+}
+
+h1{
+    font-size:40px;
+    font-weight:500;
+    letter-spacing:-1px;
+}
+
+.user{
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:11px 16px;
+    color:#d9eadb;
+    background:var(--soft);
+}
+
+.hero{
+    border:1px solid var(--line);
+    border-radius:28px;
+    padding:42px;
+    margin-bottom:24px;
+    background:
+        linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,.01)),
+        linear-gradient(120deg,#102b24,#071713);
+    overflow:hidden;
     position:relative;
-    background:#10151b;
-    border:1px solid #242a31;
-    padding:24px 18px;
-    min-height:190px;
 }
 
-.timeline-step:first-child{
-    border-radius:18px 0 0 18px;
-}
-
-.timeline-step:last-child{
-    border-radius:0 18px 18px 0;
-}
-
-.circle{
-    width:40px;
-    height:40px;
+.hero:after{
+    content:"";
+    position:absolute;
+    width:220px;
+    height:220px;
     border-radius:50%;
+    background:rgba(123,227,168,.055);
+    right:-80px;
+    top:-80px;
+}
+
+.hero h2{
+    max-width:800px;
+    font-size:43px;
+    line-height:1.12;
+    font-weight:500;
+    letter-spacing:-1px;
+    margin-bottom:14px;
+}
+
+.hero p{
+    max-width:720px;
+    color:#a8c4b5;
+    line-height:1.75;
+    font-size:15px;
+}
+
+.section,.module{display:none}
+.section.active,.module.active{display:block}
+
+.grid4{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+}
+
+.grid3{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-bottom:18px;
+}
+
+.grid2{
+    display:grid;
+    grid-template-columns:1.4fr .9fr;
+    gap:18px;
+}
+
+.card,.panel,.widget,.item{
+    border:1px solid var(--line);
+    border-radius:22px;
+    background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012));
+    box-shadow:0 20px 70px rgba(0,0,0,.14);
+}
+
+.card{
+    min-height:250px;
+    padding:26px;
+    cursor:pointer;
+    transition:.22s;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.card:hover{
+    transform:translateY(-4px);
+    border-color:rgba(123,227,168,.50);
+    background:rgba(123,227,168,.055);
+}
+
+.card h3{
+    font-size:28px;
+    font-weight:500;
+    margin-bottom:12px;
+}
+
+.card p,.panel p,.widget p,.item small,small{
+    color:var(--muted);
+    line-height:1.6;
+}
+
+.panel,.widget,.item{padding:22px}
+
+.panel h2,.widget h3,.item h3{
+    font-weight:500;
+    margin-bottom:8px;
+}
+
+.widget strong{
+    display:block;
+    color:var(--accent2);
+    font-size:32px;
+    font-weight:500;
+    margin-bottom:4px;
+}
+
+.item{
+    margin-bottom:12px;
+    background:rgba(10,31,26,.55);
+}
+
+.status{
+    display:inline-block;
+    margin-top:12px;
+    padding:6px 11px;
+    border-radius:999px;
+    font-size:11px;
+    letter-spacing:.65px;
+    text-transform:uppercase;
+}
+
+.progress{background:rgba(123,227,168,.12);color:var(--accent2)}
+.review{background:rgba(255,255,255,.08);color:#e3f0d8}
+.done{background:rgba(123,227,168,.12);color:var(--accent)}
+.danger{background:rgba(255,138,138,.13);color:var(--danger)}
+
+.tabs{
+    display:flex;
+    gap:9px;
+    flex-wrap:wrap;
+    margin:20px 0;
+}
+
+.tabs button{
+    padding:10px 13px;
+    border:1px solid var(--line);
+    border-radius:999px;
+    background:rgba(255,255,255,.025);
+    color:#d7ead3;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.tabs button:hover,
+.tabs button.active{
+    border-color:rgba(123,227,168,.65);
+    background:rgba(123,227,168,.10);
+}
+
+.btn,.btn-soft{
+    padding:11px 14px;
+    border-radius:11px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.btn{
+    border:1px solid var(--accent);
+    background:transparent;
+    color:var(--text);
+}
+
+.btn:hover{background:var(--accent);color:#071713}
+
+.btn-soft{
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.035);
+    color:var(--text);
+}
+
+.btn-soft:hover{
+    border-color:rgba(123,227,168,.55);
+    background:rgba(123,227,168,.10);
+}
+
+.bar{
+    height:8px;
+    background:#18382e;
+    border-radius:999px;
+    margin-top:12px;
+    overflow:hidden;
+}
+
+.fill{
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+}
+
+/* Communication */
+.communication-grid{
+    display:grid;
+    grid-template-columns:1.25fr .75fr;
+    gap:18px;
+}
+
+.chat-box{
+    min-height:310px;
+    max-height:420px;
+    overflow-y:auto;
+    border:1px solid var(--line);
+    border-radius:18px;
+    background:rgba(10,31,26,.55);
+    padding:16px;
+    margin:14px 0;
+}
+
+.message{
+    max-width:82%;
+    padding:13px 14px;
+    border:1px solid var(--line);
+    border-radius:16px;
+    margin-bottom:12px;
+    background:rgba(255,255,255,.035);
+}
+
+.message.client{
+    margin-left:auto;
+    border-color:rgba(123,227,168,.42);
+    background:rgba(123,227,168,.08);
+}
+
+.message.gradum{margin-right:auto}
+
+.message strong{
+    display:block;
+    font-weight:500;
+    color:var(--text);
+    margin-bottom:5px;
+}
+
+.message span{
+    display:block;
+    color:var(--muted);
+    line-height:1.55;
+}
+
+.message small{
+    display:block;
+    margin-top:7px;
+    color:#6d8b7b;
+    font-size:11px;
+}
+
+.chat-input{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:10px;
+}
+
+.chat-input textarea{
+    min-height:74px;
+    resize:vertical;
+    background:rgba(10,31,26,.72);
+    border:1px solid var(--line);
+    border-radius:14px;
+    color:var(--text);
+    padding:12px;
+    outline:none;
+}
+
+.chat-input textarea:focus{border-color:rgba(123,227,168,.65)}
+
+.quick-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:9px;
+    margin-top:12px;
+}
+
+.comm-card{
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:rgba(10,31,26,.50);
+    padding:16px;
+    margin-bottom:12px;
+}
+
+/* Construction */
+.live-row{
+    display:grid;
+    grid-template-columns:86px 1fr;
+    gap:14px;
+    padding:15px;
+    border:1px solid var(--line);
+    border-left:3px solid var(--accent);
+    border-radius:16px;
+    background:rgba(10,31,26,.55);
+    margin-bottom:10px;
+}
+
+.live-time{
+    color:var(--accent);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.7px;
+}
+
+.evidence-grid,.document-grid{
+    display:grid;
+    gap:14px;
+}
+
+.evidence-grid{grid-template-columns:repeat(3,1fr)}
+.document-grid{grid-template-columns:repeat(4,1fr)}
+
+.evidence-card,.doc-card{
+    border:1px solid var(--line);
+    border-radius:18px;
+    background:rgba(10,31,26,.50);
+    overflow:hidden;
+}
+
+.evidence-thumb{
+    height:126px;
     display:flex;
     align-items:center;
     justify-content:center;
-    margin-bottom:18px;
-    font-weight:bold;
-    border:1px solid #b8a77a;
+    font-size:34px;
+    color:var(--accent2);
+    background:
+        linear-gradient(135deg,rgba(123,227,168,.20),rgba(255,255,255,.035)),
+        radial-gradient(circle at center,rgba(255,255,255,.08),transparent 42%);
+}
+
+.evidence-body,.doc-card{padding:17px}
+
+/* Timeline */
+.visual-timeline{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    margin-top:16px;
+}
+
+.timeline-step{
+    min-height:176px;
+    padding:20px 16px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.024);
+    position:relative;
+}
+
+.timeline-step:first-child{border-radius:18px 0 0 18px}
+.timeline-step:last-child{border-radius:0 18px 18px 0}
+
+.circle{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    border:1px solid var(--accent);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:14px;
     position:relative;
     z-index:2;
 }
 
 .line{
     position:absolute;
-    top:43px;
-    left:58px;
-    right:-22px;
+    top:39px;
+    left:54px;
+    right:-18px;
     height:2px;
-    background:#334155;
-    z-index:1;
+    background:#2d4c40;
 }
 
-.timeline-step h3{
-    font-size:17px;
-    margin-bottom:8px;
-}
-
-.timeline-step small{
-    display:block;
-    color:#a8a8a8;
-    margin-bottom:12px;
-}
-
-.timeline-step span{
-    color:#b8a77a;
-    font-size:13px;
-}
-
-.completed .circle{
-    background:#b8a77a;
-    color:#080b0f;
+.completed .circle,.active-step .circle{
+    background:var(--accent);
+    color:#071713;
 }
 
 .active-step{
-    border-color:#b8a77a;
-    background:rgba(184,167,122,.08);
+    border-color:rgba(123,227,168,.60);
+    background:rgba(123,227,168,.07);
 }
 
-.active-step .circle{
-    background:#b8a77a;
-    color:#080b0f;
-    box-shadow:0 0 0 6px rgba(184,167,122,.12);
+.timeline-step span{
+    display:block;
+    margin-top:10px;
+    color:var(--accent);
+    font-size:12px;
 }
 
-.pending .circle{
-    color:#b8a77a;
-}
-
-.timeline-summary{
-    margin-top:22px;
+/* Approval center */
+.approval-grid{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:16px;
+    grid-template-columns:1.15fr .85fr;
+    gap:18px;
 }
 
-
-/* CENTRO DE COMUNICACIÓN */
-.communication-grid{
-    display:grid;
-    grid-template-columns:1.3fr .7fr;
-    gap:22px;
-}
-.chat-box{
-    background:#080b0f;
-    border:1px solid #242a31;
-    border-radius:16px;
-    padding:16px;
-    min-height:320px;
-    max-height:420px;
-    overflow-y:auto;
+.approval-card{
+    border:1px solid var(--line);
+    border-left:3px solid var(--accent);
+    border-radius:18px;
+    padding:18px;
+    background:rgba(10,31,26,.55);
     margin-bottom:14px;
 }
-.message{
-    max-width:82%;
-    padding:13px 14px;
-    border:1px solid #242a31;
-    border-radius:16px;
-    margin-bottom:12px;
-    background:#10151b;
-}
-.message.client{
-    margin-left:auto;
-    border-color:rgba(184,167,122,.45);
-    background:rgba(184,167,122,.08);
-}
-.message.gradum{
-    margin-right:auto;
-}
-.message strong{
-    display:block;
-    color:#f5f1e8;
-    margin-bottom:5px;
-    font-weight:500;
-}
-.message span{
-    display:block;
-    color:#a8a8a8;
-    line-height:1.55;
-}
-.message small{
-    display:block;
-    margin-top:7px;
-    color:#777;
-    font-size:11px;
-}
-.chat-input{
+
+.approval-meta{
     display:grid;
-    grid-template-columns:1fr auto;
-    gap:10px;
+    grid-template-columns:repeat(4,1fr);
+    gap:9px;
+    margin:14px 0;
 }
-.chat-input textarea{
-    min-height:74px;
+
+.approval-meta div{
+    padding:11px;
+    border:1px solid var(--line);
+    border-radius:14px;
+    background:rgba(255,255,255,.025);
+}
+
+.approval-meta span{
+    display:block;
+    color:var(--accent);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    margin-bottom:4px;
+}
+
+.comment-box textarea{
+    width:100%;
+    min-height:70px;
+    margin-top:10px;
     resize:vertical;
-    background:#080b0f;
-    border:1px solid #242a31;
-    border-radius:12px;
-    color:#f5f1e8;
+    background:rgba(10,31,26,.72);
+    border:1px solid var(--line);
+    border-radius:14px;
+    color:var(--text);
     padding:12px;
     outline:none;
 }
-.chat-input textarea:focus{
-    border-color:#b8a77a;
-}
-.quick-actions{
+
+.comment-box textarea:focus{border-color:rgba(123,227,168,.65)}
+
+.approval-actions{
     display:flex;
+    gap:9px;
     flex-wrap:wrap;
-    gap:10px;
     margin-top:12px;
 }
-.comm-card{
-    background:#080b0f;
-    border:1px solid #242a31;
-    border-radius:14px;
-    padding:16px;
-    margin-bottom:12px;
+
+.history-event,.approval-note{
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:rgba(10,31,26,.50);
+    padding:14px;
+    margin-bottom:10px;
 }
+
+.approval-note{
+    color:var(--muted);
+    line-height:1.6;
+}
+
+/* Finance */
+.finance-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.finance-table th,.finance-table td{
+    padding:14px;
+    border-bottom:1px solid rgba(255,255,255,.06);
+    text-align:left;
+    color:var(--muted);
+    font-size:14px;
+}
+
+.finance-table th{
+    color:var(--accent);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.finance-table td strong{color:var(--text);font-weight:500}
+
 .toast{
-    display:none;
     position:fixed;
     right:24px;
     bottom:24px;
-    z-index:9999;
-    background:#080b0f;
-    border:1px solid #b8a77a;
-    color:#f5f1e8;
-    border-radius:14px;
-    padding:14px 16px;
+    display:none;
+    z-index:1000;
+    padding:13px 15px;
+    border:1px solid rgba(123,227,168,.45);
+    border-radius:16px;
+    background:rgba(7,23,19,.96);
     box-shadow:0 20px 60px rgba(0,0,0,.35);
 }
+
 .toast.show{display:block}
 
 @media(max-width:1000px){
-body{display:block}
-.sidebar{width:100%;height:auto;position:relative}
-.main{margin-left:0;width:100%;padding:22px}
-.grid4,.grid3,.timeline-summary,.communication-grid,.chat-input{grid-template-columns:1fr}
-.grid2{grid-template-columns:1fr}
-.visual-timeline{grid-template-columns:1fr;gap:14px}
-.timeline-step{border-radius:18px !important}
-.line{display:none}
+    body{display:block}
+    .sidebar{width:100%;height:auto;position:relative}
+    .main{margin-left:0;width:100%;padding:20px}
+    .grid4,.grid3,.grid2,.communication-grid,.chat-input,.evidence-grid,.document-grid,.approval-grid,.approval-meta{grid-template-columns:1fr}
+    .visual-timeline{grid-template-columns:1fr;gap:12px}
+    .timeline-step{border-radius:18px!important}
+    .line{display:none}
+    .topbar{align-items:flex-start;gap:12px;flex-direction:column}
+    .hero h2{font-size:34px}
 }
 </style>
 </head>
@@ -271,14 +656,13 @@ body{display:block}
 
 <div class="sidebar">
     <div class="logo">GRADUM</div>
-    <div class="subtitle">Client & Project OS</div>
+    <div class="subtitle">Client Portal</div>
 
     <div class="menu">
+        <div class="menu-label">Navigation</div>
         <button class="active" onclick="showSection('home', this)">Home</button>
 
-        <button class="hamburger-btn" onclick="toggleDivisions()">
-            ☰ Divisiones
-        </button>
+        <button class="hamburger-btn" onclick="toggleDivisions()">☰ Servicios</button>
 
         <div id="divisionMenu" class="division-menu">
             <button onclick="showSection('services', this)">Services</button>
@@ -290,104 +674,72 @@ body{display:block}
 </div>
 
 <div class="main">
-
-<div class="topbar">
-    <div>
-        <div class="eyebrow">Structured Advisory · Engineered Execution</div>
-        <h1>Gradum OS</h1>
-    </div>
-    <div class="user">Elvin González</div>
-</div>
-
-<div id="home" class="section active">
-    <div class="hero">
-        <div class="eyebrow">Corporate Home</div>
-        <h2>Portal SaaS para gestión, visualización y entrega de proyectos.</h2>
-        <p>
-            Gradum OS centraliza Services, Construction, Consulting y Ventures.
-            Cada división contiene proyectos con dashboard ejecutivo, cronograma visual,
-            informes, visitas, cambios, documentos, hitos y comunicación con cliente.
-        </p>
+    <div class="topbar">
+        <div>
+            <div class="eyebrow">Private Client Workspace</div>
+            <h1>Gradum OS</h1>
+        </div>
+        <div class="user">Elvin González</div>
     </div>
 
-    <div class="grid4">
-        <div class="card" onclick="goTo('services')">
-            <h3>Services</h3>
-            <p>Contabilidad, diseño gráfico, web design y servicios profesionales.</p>
-            <span class="status progress">Servicios activos</span>
+    <div id="home" class="section active">
+        <div class="hero">
+            <div class="eyebrow">Operating Intelligence</div>
+            <h2>Un portal claro para ver, aprobar y dar seguimiento.</h2>
+            <p>Una experiencia sencilla para que cada cliente visualice su servicio, sus entregables, avances, documentos y decisiones importantes.</p>
         </div>
 
-        <div class="card" onclick="goTo('construction')">
-            <h3>Construction</h3>
-            <p>Gestión integral de construcción, arquitectura, ingeniería y obra.</p>
-            <span class="status progress">Obras activas</span>
-        </div>
-
-        <div class="card" onclick="goTo('consulting')">
-            <h3>Consulting</h3>
-            <p>Diagnóstico, estrategia, procesos y acompañamiento empresarial.</p>
-            <span class="status review">Advisory</span>
-        </div>
-
-        <div class="card" onclick="goTo('ventures')">
-            <h3>Ventures</h3>
-            <p>Impulsadora de startups, MVPs, validación e innovación.</p>
-            <span class="status done">Startups</span>
-        </div>
-    </div>
-</div>
-
-<div id="services" class="section">
-    <div class="hero">
-        <div class="eyebrow">Gradum Services</div>
-        <h2>Servicios profesionales organizados por cliente y proyecto.</h2>
-        <p>Contabilidad, diseño gráfico y web design con entregables, reportes, hitos y aprobación del cliente.</p>
-    </div>
-
-    <div class="grid3">
-        <div class="card" onclick="openProject('services','Contabilidad para Cliente Corporativo')">
-            <h3>Contabilidad</h3>
-            <p>Reportes financieros, impuestos, conciliaciones y documentos contables.</p>
-        </div>
-
-        <div class="card" onclick="openProject('services','Identidad Visual Marca Premium')">
-            <h3>Diseño Gráfico</h3>
-            <p>Branding, piezas visuales, campañas, contenido y aprobaciones.</p>
-        </div>
-
-        <div class="card" onclick="openProject('services','Web Design Portal Comercial')">
-            <h3>Web Design</h3>
-            <p>Sitios web, landing pages, UI, contenido y publicación.</p>
+        <div class="grid4">
+            <div class="card" onclick="goTo('services')"><div><div class="eyebrow">Professional Services</div><h3>Services</h3><p>Contabilidad, diseño y web.</p></div></div>
+            <div class="card" onclick="goTo('construction')"><div><div class="eyebrow">Built Environment</div><h3>Construction</h3><p>Obra, avance y entregables.</p></div></div>
+            <div class="card" onclick="goTo('consulting')"><div><div class="eyebrow">Strategic Advisory</div><h3>Consulting</h3><p>Diagnóstico y roadmap.</p></div></div>
+            <div class="card" onclick="goTo('ventures')"><div><div class="eyebrow">Venture Studio</div><h3>Ventures</h3><p>MVPs y validación.</p></div></div>
         </div>
     </div>
 
-    <div id="servicesProject"></div>
-</div>
+    <div id="services" class="section">
+        <div class="hero">
+            <div class="eyebrow">Gradum Services</div>
+            <h2>Servicios profesionales por cliente y entregable.</h2>
+            <p>Cada servicio tiene su propio espacio, documentos, aprobaciones y reportes.</p>
+        </div>
 
-<div id="construction" class="section">
-    <div class="hero">
-        <div class="eyebrow">Gradum Construction</div>
-        <h2>Gestión integral de proyectos constructivos.</h2>
-        <p>Arquitectura e ingeniería funcionan como componentes del flujo constructivo: diseño, planos, presupuesto, ejecución, supervisión y entrega.</p>
+        <div class="grid3">
+            <div class="card" onclick="openFinanceDashboard('Cliente Corporativo')">
+                <div><div class="eyebrow">Finance Operations</div><h3>Contabilidad</h3><p>Dashboard financiero, impuestos y documentos.</p></div>
+            </div>
+            <div class="card" onclick="openProject('services','Identidad Visual Marca Premium')">
+                <div><div class="eyebrow">Brand Systems</div><h3>Diseño Gráfico</h3><p>Diseños, revisiones y aprobaciones.</p></div>
+            </div>
+            <div class="card" onclick="openProject('services','Web Design Portal Comercial')">
+                <div><div class="eyebrow">Digital Experience</div><h3>Web Design</h3><p>Desarrollo, QA y entrega.</p></div>
+            </div>
+        </div>
+
+        <div id="servicesProject"></div>
     </div>
 
-    <div class="grid3">
-        <div class="widget"><h3>Obras activas</h3><strong>12</strong><p>Proyectos en ejecución o planificación.</p></div>
-        <div class="widget"><h3>Avance promedio</h3><strong>62%</strong><p>Avance físico general.</p></div>
-        <div class="widget"><h3>Reportes emitidos</h3><strong>8</strong><p>Informes semanales y visitas.</p></div>
-    </div>
+    <div id="construction" class="section">
+        <div class="hero">
+            <div class="eyebrow">Gradum Construction</div>
+            <h2>Proyecto de obra con visibilidad simple y en vivo.</h2>
+            <p>Avance, aprobaciones, evidencias, cronograma, documentos y próximos pasos.</p>
+        </div>
 
-    <div class="grid2">
+        <div class="grid3">
+            <div class="widget"><h3>Avance</h3><strong>62%</strong><p>Progreso general.</p></div>
+            <div class="widget"><h3>Próximo hito</h3><strong>28 Jun</strong><p>Entrega parcial.</p></div>
+            <div class="widget"><h3>Estado</h3><strong>Activo</strong><p>Sin alertas críticas.</p></div>
+        </div>
+
         <div class="panel">
-            <h2>Proyectos Construction</h2>
-
+            <h2>Proyectos</h2>
             <div class="item" onclick="openProject('construction','Remodelación Local Comercial')">
                 <h3>Remodelación Local Comercial</h3>
                 <small>Cliente corporativo · Avance 62%</small>
                 <div class="bar"><div class="fill" style="width:62%"></div></div>
                 <span class="status progress">Abrir proyecto</span>
             </div>
-
             <div class="item" onclick="openProject('construction','Obra Residencial Moderna')">
                 <h3>Obra Residencial Moderna</h3>
                 <small>Diseño, presupuesto y planificación inicial.</small>
@@ -398,64 +750,32 @@ body{display:block}
 
         <div id="constructionProject"></div>
     </div>
-</div>
 
-<div id="consulting" class="section">
-    <div class="hero">
-        <div class="eyebrow">Gradum Consulting</div>
-        <h2>Advisory, estrategia y acompañamiento.</h2>
-        <p>Proyectos de consultoría con diagnóstico, roadmap, entregables, reuniones, aprobaciones y seguimiento.</p>
-    </div>
-
-    <div class="grid3">
-        <div class="widget"><h3>Clientes activos</h3><strong>5</strong><p>Procesos consultivos abiertos.</p></div>
-        <div class="widget"><h3>Entregables</h3><strong>14</strong><p>Reportes y planes de acción.</p></div>
-        <div class="widget"><h3>Sesiones</h3><strong>9</strong><p>Reuniones programadas.</p></div>
-    </div>
-
-    <div class="panel">
-        <div class="item" onclick="openProject('consulting','Diagnóstico Operativo Empresarial')">
-            <h3>Diagnóstico Operativo Empresarial</h3>
-            <small>Mapa de procesos, hallazgos y recomendaciones.</small>
+    <div id="consulting" class="section">
+        <div class="hero">
+            <div class="eyebrow">Gradum Consulting</div>
+            <h2>Consultoría organizada por diagnóstico, roadmap y entregables.</h2>
+            <p>Seguimiento simple para decisiones, reuniones y documentos clave.</p>
         </div>
-
-        <div class="item" onclick="openProject('consulting','Plan Estratégico Comercial')">
-            <h3>Plan Estratégico Comercial</h3>
-            <small>Roadmap de crecimiento y posicionamiento.</small>
+        <div class="panel">
+            <div class="item" onclick="openProject('consulting','Diagnóstico Operativo Empresarial')"><h3>Diagnóstico Operativo Empresarial</h3><small>Mapa de procesos y recomendaciones.</small></div>
+            <div class="item" onclick="openProject('consulting','Plan Estratégico Comercial')"><h3>Plan Estratégico Comercial</h3><small>Roadmap de crecimiento.</small></div>
         </div>
+        <div id="consultingProject"></div>
     </div>
 
-    <div id="consultingProject"></div>
-</div>
-
-<div id="ventures" class="section">
-    <div class="hero">
-        <div class="eyebrow">Gradum Ventures</div>
-        <h2>Impulsadora de startups, MVPs y nuevas unidades de negocio.</h2>
-        <p>Desde idea hasta validación: hipótesis, mercado, prototipo, métricas, inversión y escalabilidad.</p>
-    </div>
-
-    <div class="grid3">
-        <div class="widget"><h3>Ideas activas</h3><strong>11</strong><p>Oportunidades en evaluación.</p></div>
-        <div class="widget"><h3>MVPs</h3><strong>3</strong><p>Prototipos en desarrollo.</p></div>
-        <div class="widget"><h3>Startups</h3><strong>2</strong><p>Proyectos con potencial de spin-off.</p></div>
-    </div>
-
-    <div class="panel">
-        <div class="item" onclick="openProject('ventures','Gradum OS SaaS')">
-            <h3>Gradum OS SaaS</h3>
-            <small>Plataforma de gestión y portal del cliente.</small>
+    <div id="ventures" class="section">
+        <div class="hero">
+            <div class="eyebrow">Gradum Ventures</div>
+            <h2>Startups, MVPs y nuevas unidades de negocio.</h2>
+            <p>Validación, roadmap, métricas, inversión y escalabilidad.</p>
         </div>
-
-        <div class="item" onclick="openProject('ventures','Motor de Recomendaciones Locales')">
-            <h3>Motor de Recomendaciones Locales</h3>
-            <small>Google Places, tendencias y recomendaciones.</small>
+        <div class="panel">
+            <div class="item" onclick="openProject('ventures','Gradum OS SaaS')"><h3>Gradum OS SaaS</h3><small>Portal del cliente y gestión de proyectos.</small></div>
+            <div class="item" onclick="openProject('ventures','Motor de Recomendaciones Locales')"><h3>Motor de Recomendaciones Locales</h3><small>Google Places y tendencias.</small></div>
         </div>
+        <div id="venturesProject"></div>
     </div>
-
-    <div id="venturesProject"></div>
-</div>
-
 </div>
 
 <script>
@@ -468,15 +788,14 @@ function showSection(sectionId, button){
     document.getElementById(sectionId).classList.add("active");
 
     document.querySelectorAll(".menu button").forEach(b => b.classList.remove("active"));
-    button.classList.add("active");
+    if(button){button.classList.add("active");}
 }
 
 function goTo(sectionId){
     const menu = document.getElementById("divisionMenu");
-    if(menu){ menu.classList.add("open"); }
+    if(menu){menu.classList.add("open");}
 
-    const buttons = document.querySelectorAll(".menu button");
-    buttons.forEach(b => {
+    document.querySelectorAll(".menu button").forEach(b => {
         if(b.textContent.toLowerCase().includes(sectionId)){
             b.click();
         }
@@ -488,54 +807,87 @@ function openProject(division, projectName){
     container.innerHTML = projectWorkspace(projectName, division);
 }
 
+function openFinanceDashboard(clientName){
+    document.getElementById("servicesProject").innerHTML = `
+    <div class="panel" style="margin-top:20px">
+        <div class="eyebrow">Financial Workspace</div>
+        <h2>Contabilidad & Finanzas · ${clientName}</h2>
+        <p>Vista simplificada para revisar estado financiero, impuestos, documentos y decisiones.</p>
+
+        <div class="tabs">
+            <button class="active" onclick="showModule('finance-summary', this)">Resumen</button>
+            <button onclick="showModule('finance-budget', this)">Budget vs Actual</button>
+            <button onclick="showModule('finance-taxes', this)">Impuestos</button>
+            <button onclick="showModule('finance-docs', this)">Documentos</button>
+        </div>
+
+        <div id="finance-summary" class="module active">
+            <div class="grid3">
+                <div class="widget"><h3>Ingresos</h3><strong>RD$2.4M</strong><p>Período actual.</p></div>
+                <div class="widget"><h3>Utilidad</h3><strong>RD$820K</strong><p>Resultado neto.</p></div>
+                <div class="widget"><h3>Cash</h3><strong>RD$1.1M</strong><p>Disponible proyectado.</p></div>
+            </div>
+            <div class="item"><h3>Lectura ejecutiva</h3><small>El período se mantiene saludable. Se recomienda dar seguimiento a facturas vencidas y cierre fiscal.</small></div>
+        </div>
+
+        <div id="finance-budget" class="module">
+            <table class="finance-table">
+                <thead><tr><th>Partida</th><th>Presupuesto</th><th>Actual</th><th>Estado</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Ingresos</strong></td><td>RD$2.22M</td><td>RD$2.4M</td><td><span class="status done">Favorable</span></td></tr>
+                    <tr><td><strong>Costos</strong></td><td>RD$855K</td><td>RD$920K</td><td><span class="status review">Atención</span></td></tr>
+                    <tr><td><strong>Utilidad</strong></td><td>RD$725K</td><td>RD$820K</td><td><span class="status done">Favorable</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="finance-taxes" class="module">
+            <div class="grid3">
+                <div class="widget"><h3>ITBIS</h3><strong>RD$186K</strong><p>Estimado por pagar.</p></div>
+                <div class="widget"><h3>Retenciones</h3><strong>RD$42K</strong><p>Acumulado.</p></div>
+                <div class="widget"><h3>Fecha límite</h3><strong>20</strong><p>Día fiscal.</p></div>
+            </div>
+        </div>
+
+        <div id="finance-docs" class="module">
+            <div class="document-grid">
+                <div class="doc-card"><h3>Estados Financieros</h3><small>Balance y resultados.</small></div>
+                <div class="doc-card"><h3>Facturas</h3><small>Emitidas y recibidas.</small></div>
+                <div class="doc-card"><h3>Conciliación</h3><small>Movimientos bancarios.</small></div>
+                <div class="doc-card"><h3>Declaraciones</h3><small>ITBIS y retenciones.</small></div>
+            </div>
+        </div>
+    </div>`;
+}
+
 function projectWorkspace(name, division){
     const id = division + "Module";
 
     return `
-    <div class="panel" style="margin-top:22px">
+    <div class="panel" style="margin-top:20px">
         <div class="eyebrow">Project Workspace</div>
         <h2>${name}</h2>
-        <p>Espacio SaaS del proyecto con visibilidad para equipo interno y cliente.</p>
+        <p>Un espacio simple para ver estado, comunicar, aprobar entregables, revisar avances y consultar documentos.</p>
 
         <div class="tabs">
-            <button class="active" onclick="showModule('${id}-dashboard', this)">Dashboard Ejecutivo</button>
+            <button class="active" onclick="showModule('${id}-overview', this)">Resumen</button>
             <button onclick="showModule('${id}-communication', this)">Comunicación</button>
-            <button onclick="showModule('${id}-timeline', this)">Cronograma General</button>
-            <button onclick="showModule('${id}-weekly', this)">Informes Semanales</button>
-            <button onclick="showModule('${id}-visits', this)">Visitas / Reuniones</button>
-            <button onclick="showModule('${id}-changes', this)">Registro de Cambios</button>
+            <button onclick="showModule('${id}-approvals', this)">Aprobaciones</button>
+            ${division === 'construction' ? `
+                <button onclick="showModule('${id}-live', this)">Obra en Vivo</button>
+                <button onclick="showModule('${id}-evidence', this)">Evidencias</button>
+            ` : ``}
+            <button onclick="showModule('${id}-timeline', this)">Cronograma</button>
             <button onclick="showModule('${id}-docs', this)">Documentos</button>
-            <button onclick="showModule('${id}-milestones', this)">Próximos Hitos</button>
         </div>
 
-        <div id="${id}-dashboard" class="module active">
+        <div id="${id}-overview" class="module active">
             <div class="grid3">
-                <div class="widget">
-                    <h3>Avance</h3>
-                    <strong>62%</strong>
-                    <p>Progreso general del proyecto.</p>
-                </div>
-
-                <div class="widget">
-                    <h3>Estado</h3>
-                    <strong>Activo</strong>
-                    <p>Proyecto en ejecución.</p>
-                </div>
-
-                <div class="widget">
-                    <h3>Próximo hito</h3>
-                    <strong>28 Jun</strong>
-                    <p>Entrega parcial programada.</p>
-                </div>
+                <div class="widget"><h3>Avance</h3><strong>${division === 'construction' ? '62%' : '48%'}</strong><p>Progreso general.</p></div>
+                <div class="widget"><h3>Estado</h3><strong>Activo</strong><p>Sin alertas críticas.</p></div>
+                <div class="widget"><h3>Próximo hito</h3><strong>28 Jun</strong><p>Entrega parcial.</p></div>
             </div>
-
-            <div class="item">
-                <h3>Resumen ejecutivo</h3>
-                <small>
-                    El proyecto avanza conforme al plan. Existen documentos pendientes de aprobación,
-                    un cambio en revisión y próximos hitos programados para cierre de fase.
-                </small>
-            </div>
+            <div class="item"><h3>Resumen ejecutivo</h3><small>El proyecto avanza conforme al plan. Hay entregables pendientes de aprobación y próximos hitos programados.</small></div>
         </div>
 
         <div id="${id}-communication" class="module">
@@ -543,7 +895,7 @@ function projectWorkspace(name, division){
                 <div class="panel">
                     <div class="eyebrow">Project Conversation</div>
                     <h2>Comunicación del Proyecto</h2>
-                    <p>Canal simple para preguntas, respuestas, confirmaciones y seguimiento. Los mensajes se guardan en el navegador con localStorage.</p>
+                    <p>Canal simple para preguntas, respuestas, confirmaciones y seguimiento. Los mensajes se guardan en el navegador.</p>
 
                     <div class="chat-box" id="${id}-chat-box"></div>
 
@@ -553,185 +905,152 @@ function projectWorkspace(name, division){
                     </div>
 
                     <div class="quick-actions">
-                        <button class="btn" onclick="sendQuickMessage('${id}','Cliente','¿Cuál es el próximo paso del proyecto?')">Preguntar próximo paso</button>
-                        <button class="btn" onclick="sendQuickMessage('${id}','Cliente','Favor confirmar si este entregable es la versión final.')">Confirmar versión final</button>
-                        <button class="btn" onclick="sendGradumReply('${id}')">Simular respuesta Gradum</button>
+                        <button class="btn-soft" onclick="sendQuickMessage('${id}','Cliente','¿Cuál es el próximo paso del proyecto?')">Próximo paso</button>
+                        <button class="btn-soft" onclick="sendQuickMessage('${id}','Cliente','Favor confirmar si este entregable es la versión final.')">Confirmar versión</button>
+                        <button class="btn-soft" onclick="sendGradumReply('${id}')">Simular respuesta</button>
                     </div>
                 </div>
 
                 <div class="panel">
                     <div class="eyebrow">Control</div>
-                    <h2>Estado del canal</h2>
+                    <h2>Canal activo</h2>
+
                     <div class="comm-card">
-                        <h3>Canal activo</h3>
-                        <small>Cliente ↔ Gradum</small><br>
+                        <h3>Cliente ↔ Gradum</h3>
+                        <small>Preguntas, confirmaciones, comentarios de entregables y solicitudes puntuales.</small><br>
                         <span class="status progress">Disponible</span>
                     </div>
-                    <div class="comm-card">
-                        <h3>Uso recomendado</h3>
-                        <small>Preguntas, confirmaciones, comentarios de entregables y solicitudes puntuales.</small>
-                    </div>
+
                     <div class="comm-card">
                         <h3>Trazabilidad</h3>
-                        <small>En esta demo los mensajes se guardan localmente. En producción se conecta a usuarios, correo y base de datos.</small>
+                        <small>En esta demo los mensajes se guardan localmente. En producción se conectan con usuarios, correo y base de datos.</small>
                     </div>
-                    <button class="btn" onclick="resetChat('${id}')">Limpiar conversación</button>
+
+                    <button class="btn-soft" onclick="resetChat('${id}')">Limpiar conversación</button>
                 </div>
             </div>
         </div>
+
+        <div id="${id}-approvals" class="module">
+            <div class="approval-grid">
+                <div class="panel">
+                    <div class="eyebrow">Pendientes</div>
+                    <h2>Aprobaciones</h2>
+                    <p>Aprueba o solicita cambios. Las decisiones se guardan en el navegador.</p>
+                    ${approvalCard(id, "approval-1", "Entregable Principal V03", "Documento pendiente de revisión del cliente.", "V03", "18 Jun 2026", "Gradum")}
+                    ${approvalCard(id, "approval-2", "Presupuesto Ajustado V02", "Actualización por cambio de alcance.", "V02", "19 Jun 2026", "Dirección Técnica")}
+                </div>
+
+                <div class="panel">
+                    <div class="eyebrow">Historial</div>
+                    <h2>Decisiones</h2>
+                    <div id="${id}-approval-events"></div>
+                    <div class="approval-note">
+                        Las aprobaciones son una simulación funcional. En producción se conectan con usuario, PDF, firma digital y base de datos.
+                    </div>
+                    <button class="btn-soft" style="margin-top:10px" onclick="resetApprovalCenter('${id}')">Reiniciar demo</button>
+                </div>
+            </div>
+        </div>
+
+        ${division === 'construction' ? `
+        <div id="${id}-live" class="module">
+            <div class="grid2">
+                <div class="panel">
+                    <div class="eyebrow">Live Feed</div>
+                    <h2>Actividad reciente</h2>
+                    <div class="live-row"><div class="live-time">Hoy · 9:15</div><div><h3>Armado de acero completado</h3><small>Zona de columnas principales.</small></div></div>
+                    <div class="live-row"><div class="live-time">Hoy · 11:40</div><div><h3>Llegada de materiales</h3><small>Cemento, acero y agregados.</small></div></div>
+                    <div class="live-row"><div class="live-time">Hoy · 3:20</div><div><h3>Supervisión técnica</h3><small>Revisión de seguridad y avance.</small></div></div>
+                </div>
+                <div class="panel">
+                    <div class="eyebrow">Semáforo</div>
+                    <h2>Estado general</h2>
+                    <div class="comm-card"><h3>Cronograma</h3><small>Dentro del plan.</small><br><span class="status done">Estable</span></div>
+                    <div class="comm-card"><h3>Presupuesto</h3><small>Sin desviaciones críticas.</small><br><span class="status done">Controlado</span></div>
+                    <div class="comm-card"><h3>Riesgos</h3><small>Materiales en seguimiento.</small><br><span class="status review">Atención</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="${id}-evidence" class="module">
+            <div class="evidence-grid">
+                <div class="evidence-card"><div class="evidence-thumb">📷</div><div class="evidence-body"><h3>Semana 1</h3><small>24 fotos · Excavación.</small></div></div>
+                <div class="evidence-card"><div class="evidence-thumb">🎥</div><div class="evidence-body"><h3>Semana 2</h3><small>31 fotos · Cimentación.</small></div></div>
+                <div class="evidence-card"><div class="evidence-thumb">📸</div><div class="evidence-body"><h3>Semana 3</h3><small>18 fotos · Muros.</small></div></div>
+            </div>
+        </div>
+        ` : ``}
 
         <div id="${id}-timeline" class="module">
             <div class="visual-timeline">
-
-                <div class="timeline-step completed">
-                    <div class="circle">1</div>
-                    <div class="line"></div>
-                    <h3>Brief / Alcance</h3>
-                    <small>Definición inicial, objetivos, responsables y entregables.</small>
-                    <span>01 Jun - 03 Jun</span>
-                </div>
-
-                <div class="timeline-step completed">
-                    <div class="circle">2</div>
-                    <div class="line"></div>
-                    <h3>Planificación</h3>
-                    <small>Cronograma, presupuesto, recursos y estructura de trabajo.</small>
-                    <span>04 Jun - 10 Jun</span>
-                </div>
-
-                <div class="timeline-step active-step">
-                    <div class="circle">3</div>
-                    <div class="line"></div>
-                    <h3>Ejecución</h3>
-                    <small>Desarrollo operativo, construcción, diseño o implementación.</small>
-                    <span>11 Jun - 25 Jun</span>
-                </div>
-
-                <div class="timeline-step pending">
-                    <div class="circle">4</div>
-                    <div class="line"></div>
-                    <h3>Revisión</h3>
-                    <small>Validación interna, control de calidad y aprobación del cliente.</small>
-                    <span>26 Jun - 28 Jun</span>
-                </div>
-
-                <div class="timeline-step pending">
-                    <div class="circle">5</div>
-                    <h3>Entrega Final</h3>
-                    <small>Cierre, documentación final y entrega formal del proyecto.</small>
-                    <span>29 Jun</span>
-                </div>
-
-            </div>
-
-            <div class="timeline-summary">
-                <div class="widget">
-                    <h3>Fase actual</h3>
-                    <strong>3/5</strong>
-                    <p>Ejecución en progreso.</p>
-                </div>
-
-                <div class="widget">
-                    <h3>Días restantes</h3>
-                    <strong>12</strong>
-                    <p>Hasta entrega final.</p>
-                </div>
-
-                <div class="widget">
-                    <h3>Riesgo</h3>
-                    <strong>Bajo</strong>
-                    <p>Sin retrasos críticos registrados.</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="${id}-weekly" class="module">
-            <div class="item">
-                <h3>Informe Semanal #01</h3>
-                <small>Avance, tareas realizadas, fotos, incidencias y próximos pasos.</small><br>
-                <button class="btn">Ver informe</button>
-            </div>
-
-            <div class="item">
-                <h3>Informe Semanal #02</h3>
-                <small>Estado actualizado, puntos críticos, decisiones pendientes y evidencias.</small><br>
-                <button class="btn">Ver informe</button>
-            </div>
-        </div>
-
-        <div id="${id}-visits" class="module">
-            <div class="item">
-                <h3>Informe de visita / reunión</h3>
-                <small>Fecha: 17 Junio 2026 · Observaciones, acuerdos, responsables y próximos pasos.</small>
-            </div>
-
-            <div class="item">
-                <h3>Próxima visita</h3>
-                <small>Programada para revisión de avances y validación de entregables.</small>
-            </div>
-        </div>
-
-        <div id="${id}-changes" class="module">
-            <div class="item">
-                <h3>Cambio solicitado</h3>
-                <small>Impacto: +4 días · Costo estimado: US$1,200 · Estado: pendiente aprobación.</small><br>
-                <span class="status review">Pendiente</span>
-            </div>
-
-            <div class="item">
-                <h3>Ajuste aprobado</h3>
-                <small>Modificación menor documentada, aprobada y cerrada.</small><br>
-                <span class="status done">Aprobado</span>
+                <div class="timeline-step completed"><div class="circle">1</div><div class="line"></div><h3>Alcance</h3><small>Objetivos y entregables.</small><span>01-03 Jun</span></div>
+                <div class="timeline-step completed"><div class="circle">2</div><div class="line"></div><h3>Planificación</h3><small>Cronograma y recursos.</small><span>04-10 Jun</span></div>
+                <div class="timeline-step active-step"><div class="circle">3</div><div class="line"></div><h3>Ejecución</h3><small>Trabajo principal.</small><span>11-25 Jun</span></div>
+                <div class="timeline-step"><div class="circle">4</div><div class="line"></div><h3>Revisión</h3><small>Calidad y aprobación.</small><span>26-28 Jun</span></div>
+                <div class="timeline-step"><div class="circle">5</div><h3>Entrega</h3><small>Cierre formal.</small><span>29 Jun</span></div>
             </div>
         </div>
 
         <div id="${id}-docs" class="module">
-            <div class="item">
-                <h3>Documento de alcance</h3>
-                <small>PDF · Entregado al cliente.</small>
-            </div>
-
-            <div class="item">
-                <h3>Presupuesto / propuesta</h3>
-                <small>Documento comercial pendiente de firma.</small>
-            </div>
-
-            <div class="item">
-                <h3>Entregables técnicos</h3>
-                <small>Archivos finales, planos, artes, reportes o prototipos según división.</small>
-            </div>
-        </div>
-
-        <div id="${id}-milestones" class="module">
-            <div class="item">
-                <h3>Aprobación pendiente</h3>
-                <small>Cliente debe aprobar el último entregable para avanzar.</small>
-            </div>
-
-            <div class="item">
-                <h3>Entrega parcial</h3>
-                <small>Programada para el próximo ciclo de trabajo.</small>
-            </div>
-
-            <div class="item">
-                <h3>Cierre de fase</h3>
-                <small>Revisión ejecutiva y documentación final.</small>
+            <div class="document-grid">
+                <div class="doc-card"><h3>Contrato</h3><small>Documento base.</small></div>
+                <div class="doc-card"><h3>Planos</h3><small>Versiones aprobadas.</small></div>
+                <div class="doc-card"><h3>Informes</h3><small>Reportes semanales.</small></div>
+                <div class="doc-card"><h3>Entregables</h3><small>Archivos finales.</small></div>
             </div>
         </div>
     </div>`;
 }
 
+function approvalCard(id, localId, title, description, version, date, owner){
+    const fullId = id + "-" + localId;
+    return `
+    <div class="approval-card" id="${fullId}">
+        <h3>${title}</h3>
+        <small>${description}</small>
+        <div class="approval-meta">
+            <div><span>Versión</span><small>${version}</small></div>
+            <div><span>Fecha</span><small>${date}</small></div>
+            <div><span>Responsable</span><small>${owner}</small></div>
+            <div><span>Estado</span><small id="${fullId}-status">Pendiente</small></div>
+        </div>
+        <span class="status review" id="${fullId}-badge">Pendiente</span>
+        <div class="comment-box">
+            <textarea id="${fullId}-comment" placeholder="Comentario opcional..."></textarea>
+        </div>
+        <div class="approval-actions">
+            <button class="btn-soft" onclick="viewDocument('${title}')">Ver</button>
+            <button class="btn-soft" onclick="approvalAction('${id}','${fullId}','${title}','Aprobado')">Aprobar</button>
+            <button class="btn-soft" onclick="approvalAction('${id}','${fullId}','${title}','Cambios solicitados')">Solicitar cambios</button>
+        </div>
+    </div>`;
+}
 
-function getChatStore(id){
-    try{
-        return JSON.parse(localStorage.getItem("gradum_chat_" + id)) || [];
-    }catch(e){
-        return [];
+function showModule(moduleId, button){
+    const parent = button.closest(".panel");
+    parent.querySelectorAll(".module").forEach(m => m.classList.remove("active"));
+    document.getElementById(moduleId).classList.add("active");
+    parent.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
+    button.classList.add("active");
+
+    if(moduleId.endsWith("-approvals")){
+        loadApprovalCenter(moduleId.replace("-approvals",""));
+    }
+
+    if(moduleId.endsWith("-communication")){
+        renderChat(moduleId.replace("-communication",""));
     }
 }
 
+/* Chat */
+function getChatStore(id){
+    try{return JSON.parse(localStorage.getItem("gradum_chat_"+id)) || [];}
+    catch(e){return [];}
+}
+
 function saveChatStore(id, messages){
-    localStorage.setItem("gradum_chat_" + id, JSON.stringify(messages));
+    localStorage.setItem("gradum_chat_"+id, JSON.stringify(messages));
 }
 
 function seedChat(id){
@@ -747,7 +1066,7 @@ function seedChat(id){
 }
 
 function renderChat(id){
-    const box = document.getElementById(id + "-chat-box");
+    const box = document.getElementById(id+"-chat-box");
     if(!box){return;}
 
     const messages = seedChat(id);
@@ -762,28 +1081,28 @@ function renderChat(id){
 }
 
 function sendMessage(id, sender){
-    const input = document.getElementById(id + "-chat-input");
+    const input = document.getElementById(id+"-chat-input");
     if(!input || !input.value.trim()){
-        showToast("Escribe un mensaje primero");
+        toast("Escribe un mensaje primero");
         return;
     }
 
     const messages = seedChat(id);
-    const date = new Date().toLocaleString("es-DO", {day:"2-digit", month:"short", hour:"2-digit", minute:"2-digit"});
+    const date = new Date().toLocaleString("es-DO",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
     messages.push({sender:sender, text:input.value.trim(), date:date});
     saveChatStore(id, messages);
     input.value = "";
     renderChat(id);
-    showToast("Mensaje enviado");
+    toast("Mensaje enviado");
 }
 
 function sendQuickMessage(id, sender, text){
     const messages = seedChat(id);
-    const date = new Date().toLocaleString("es-DO", {day:"2-digit", month:"short", hour:"2-digit", minute:"2-digit"});
+    const date = new Date().toLocaleString("es-DO",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
     messages.push({sender:sender, text:text, date:date});
     saveChatStore(id, messages);
     renderChat(id);
-    showToast("Mensaje agregado");
+    toast("Mensaje agregado");
 }
 
 function sendGradumReply(id){
@@ -793,45 +1112,109 @@ function sendGradumReply(id){
         "El próximo paso es completar la revisión del entregable pendiente.",
         "Estamos actualizando el reporte y lo dejaremos disponible en Documentos."
     ];
-    const text = replies[Math.floor(Math.random() * replies.length)];
+    const text = replies[Math.floor(Math.random()*replies.length)];
     const messages = seedChat(id);
-    const date = new Date().toLocaleString("es-DO", {day:"2-digit", month:"short", hour:"2-digit", minute:"2-digit"});
+    const date = new Date().toLocaleString("es-DO",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
     messages.push({sender:"Gradum", text:text, date:date});
     saveChatStore(id, messages);
     renderChat(id);
-    showToast("Respuesta de Gradum simulada");
+    toast("Respuesta simulada");
 }
 
 function resetChat(id){
-    localStorage.removeItem("gradum_chat_" + id);
+    localStorage.removeItem("gradum_chat_"+id);
     renderChat(id);
-    showToast("Conversación reiniciada");
+    toast("Conversación reiniciada");
 }
 
-function showToast(message){
-    let toast = document.getElementById("gradum-toast");
-    if(!toast){
-        toast = document.createElement("div");
-        toast.id = "gradum-toast";
-        toast.className = "toast";
-        document.body.appendChild(toast);
-    }
-    toast.textContent = message;
-    toast.classList.add("show");
-    setTimeout(() => toast.classList.remove("show"), 2200);
+/* Approvals */
+function getStore(id){
+    try{return JSON.parse(localStorage.getItem("gradum_approvals_"+id)) || {documents:{},events:[]};}
+    catch(e){return {documents:{},events:[]};}
 }
 
-function showModule(moduleId, button){
-    const parent = button.closest(".panel");
-    parent.querySelectorAll(".module").forEach(m => m.classList.remove("active"));
-    document.getElementById(moduleId).classList.add("active");
+function saveStore(id, store){
+    localStorage.setItem("gradum_approvals_"+id, JSON.stringify(store));
+}
 
-    parent.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
-    button.classList.add("active");
+function approvalAction(id, fullId, title, statusText){
+    const commentEl = document.getElementById(fullId+"-comment");
+    const comment = commentEl ? commentEl.value.trim() : "";
+    const date = new Date().toLocaleString("es-DO",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
+    const store = getStore(id);
 
-    if(moduleId.endsWith("-communication")){
-        renderChat(moduleId.replace("-communication", ""));
+    store.documents[fullId] = {status:statusText, comment, date};
+    store.events.unshift({title, status:statusText, comment, date});
+    saveStore(id, store);
+
+    updateApprovalUI(fullId, store.documents[fullId]);
+    renderEvents(id);
+    toast(`${title}: ${statusText}`);
+}
+
+function updateApprovalUI(fullId, state){
+    const status = document.getElementById(fullId+"-status");
+    const badge = document.getElementById(fullId+"-badge");
+    const comment = document.getElementById(fullId+"-comment");
+
+    if(status){status.textContent = state.status;}
+    if(badge){
+        badge.textContent = state.status;
+        badge.className = state.status === "Aprobado" ? "status done" :
+                          state.status === "Cambios solicitados" ? "status danger" : "status review";
     }
+    if(comment && state.comment){comment.value = state.comment;}
+}
+
+function loadApprovalCenter(id){
+    const store = getStore(id);
+    Object.keys(store.documents).forEach(fullId => updateApprovalUI(fullId, store.documents[fullId]));
+    renderEvents(id);
+}
+
+function renderEvents(id){
+    const box = document.getElementById(id+"-approval-events");
+    if(!box){return;}
+    const store = getStore(id);
+    if(!store.events.length){
+        box.innerHTML = `<div class="approval-note">Sin decisiones nuevas todavía.</div>`;
+        return;
+    }
+    box.innerHTML = store.events.map(e => `
+        <div class="history-event">
+            <strong>${e.status}</strong>
+            <small style="display:block;margin-top:4px">${e.title} · ${e.date}</small>
+            <p>${e.comment || "Sin comentario adicional."}</p>
+        </div>`).join("");
+}
+
+function resetApprovalCenter(id){
+    localStorage.removeItem("gradum_approvals_"+id);
+    ["approval-1","approval-2"].forEach(localId => {
+        const fullId = id+"-"+localId;
+        updateApprovalUI(fullId,{status:"Pendiente",comment:""});
+        const txt = document.getElementById(fullId+"-comment");
+        if(txt){txt.value = "";}
+    });
+    renderEvents(id);
+    toast("Demo reiniciada");
+}
+
+function viewDocument(title){
+    toast("Vista previa: " + title);
+}
+
+function toast(message){
+    let t = document.getElementById("toast");
+    if(!t){
+        t = document.createElement("div");
+        t.id = "toast";
+        t.className = "toast";
+        document.body.appendChild(t);
+    }
+    t.textContent = message;
+    t.classList.add("show");
+    setTimeout(()=>t.classList.remove("show"),2200);
 }
 </script>
 
@@ -843,10 +1226,5 @@ function showModule(moduleId, button){
 def home():
     return render_template_string(HTML)
 
-def open_browser():
-    time.sleep(1)
-    webbrowser.open("http://127.0.0.1:5000")
-
 if __name__ == "__main__":
-    threading.Thread(target=open_browser).start()
     app.run(debug=False)
