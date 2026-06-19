@@ -331,6 +331,137 @@ h1{
     background:linear-gradient(90deg,var(--accent),var(--accent2));
 }
 
+
+/* Intelligence essentials */
+.notify-strip{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin-bottom:18px;
+}
+
+.notify-card{
+    border:1px solid var(--line);
+    border-radius:18px;
+    background:rgba(10,31,26,.55);
+    padding:16px;
+}
+
+.notify-card strong{
+    display:block;
+    color:var(--accent2);
+    font-size:24px;
+    font-weight:500;
+    margin-bottom:4px;
+}
+
+.waiting-card{
+    border:1px solid rgba(200,245,123,.28);
+    border-radius:20px;
+    background:rgba(200,245,123,.06);
+    padding:18px;
+    margin-bottom:18px;
+}
+
+.waiting-card h3{
+    font-weight:500;
+    margin-bottom:6px;
+}
+
+.activity-list{
+    display:grid;
+    gap:12px;
+}
+
+.activity-event{
+    display:grid;
+    grid-template-columns:92px 1fr;
+    gap:14px;
+    align-items:flex-start;
+    border:1px solid var(--line);
+    border-left:3px solid var(--accent);
+    border-radius:16px;
+    background:rgba(10,31,26,.55);
+    padding:15px;
+}
+
+.activity-time{
+    color:var(--accent);
+    font-size:12px;
+    letter-spacing:.7px;
+    text-transform:uppercase;
+}
+
+.steps-list{
+    display:grid;
+    gap:10px;
+}
+
+.step-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    border:1px solid var(--line);
+    border-radius:15px;
+    background:rgba(10,31,26,.50);
+    padding:14px;
+}
+
+.step-mark{
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:1px solid var(--accent);
+    color:var(--accent);
+    flex:0 0 auto;
+}
+
+.step-row.done-step .step-mark{
+    background:var(--accent);
+    color:var(--bg);
+}
+
+.step-row.current-step{
+    border-color:rgba(200,245,123,.45);
+    background:rgba(200,245,123,.06);
+}
+
+.file-list{
+    display:grid;
+    gap:12px;
+}
+
+.file-row{
+    display:grid;
+    grid-template-columns:1fr 100px 120px auto;
+    gap:12px;
+    align-items:center;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:rgba(10,31,26,.50);
+    padding:14px;
+}
+
+.file-title{
+    display:flex;
+    gap:10px;
+    align-items:center;
+}
+
+.file-icon{
+    width:34px;
+    height:34px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(123,227,168,.10);
+    border:1px solid rgba(123,227,168,.22);
+}
+
 /* Communication */
 .communication-grid{
     display:grid;
@@ -642,7 +773,7 @@ h1{
     body{display:block}
     .sidebar{width:100%;height:auto;position:relative}
     .main{margin-left:0;width:100%;padding:20px}
-    .grid4,.grid3,.grid2,.communication-grid,.chat-input,.evidence-grid,.document-grid,.approval-grid,.approval-meta{grid-template-columns:1fr}
+    .grid4,.grid3,.grid2,.communication-grid,.chat-input,.evidence-grid,.document-grid,.approval-grid,.approval-meta,.notify-strip,.file-row{grid-template-columns:1fr}
     .visual-timeline{grid-template-columns:1fr;gap:12px}
     .timeline-step{border-radius:18px!important}
     .line{display:none}
@@ -871,23 +1002,81 @@ function projectWorkspace(name, division){
 
         <div class="tabs">
             <button class="active" onclick="showModule('${id}-overview', this)">Resumen</button>
+            <button onclick="showModule('${id}-activity', this)">Actividad</button>
             <button onclick="showModule('${id}-communication', this)">Comunicación</button>
             <button onclick="showModule('${id}-approvals', this)">Aprobaciones</button>
             ${division === 'construction' ? `
                 <button onclick="showModule('${id}-live', this)">Obra en Vivo</button>
                 <button onclick="showModule('${id}-evidence', this)">Evidencias</button>
             ` : ``}
+            <button onclick="showModule('${id}-nextsteps', this)">Próximos Pasos</button>
             <button onclick="showModule('${id}-timeline', this)">Cronograma</button>
+            <button onclick="showModule('${id}-files', this)">Archivos</button>
             <button onclick="showModule('${id}-docs', this)">Documentos</button>
         </div>
 
         <div id="${id}-overview" class="module active">
+            <div class="notify-strip">
+                <div class="notify-card"><strong>3</strong><small>Notificaciones pendientes</small></div>
+                <div class="notify-card"><strong>2</strong><small>Documentos nuevos</small></div>
+                <div class="notify-card"><strong>1</strong><small>Aprobación requerida</small></div>
+                <div class="notify-card"><strong>Hoy</strong><small>Última actualización</small></div>
+            </div>
+
+            <div class="waiting-card">
+                <div class="eyebrow">Estado de espera</div>
+                <h3>Esperando aprobación del cliente</h3>
+                <small>Hay un entregable pendiente de decisión para continuar con la siguiente etapa.</small><br>
+                <span class="status review">Acción requerida</span>
+            </div>
+
             <div class="grid3">
                 <div class="widget"><h3>Avance</h3><strong>${division === 'construction' ? '62%' : '48%'}</strong><p>Progreso general.</p></div>
                 <div class="widget"><h3>Estado</h3><strong>Activo</strong><p>Sin alertas críticas.</p></div>
                 <div class="widget"><h3>Próximo hito</h3><strong>28 Jun</strong><p>Entrega parcial.</p></div>
             </div>
             <div class="item"><h3>Resumen ejecutivo</h3><small>El proyecto avanza conforme al plan. Hay entregables pendientes de aprobación y próximos hitos programados.</small></div>
+        </div>
+
+
+        <div id="${id}-activity" class="module">
+            <div class="grid2">
+                <div class="panel">
+                    <div class="eyebrow">Recent Activity</div>
+                    <h2>Actividad reciente</h2>
+                    <p>Una línea de tiempo simple que unifica mensajes, documentos, aprobaciones y avances.</p>
+
+                    <div class="activity-list" id="${id}-activity-list">
+                        <div class="activity-event"><div class="activity-time">Hoy · 09:15</div><div><h3>Documento cargado</h3><small>Informe Semanal #04 disponible para revisión.</small></div></div>
+                        <div class="activity-event"><div class="activity-time">Hoy · 10:40</div><div><h3>Aprobación pendiente</h3><small>Presupuesto Ajustado V02 requiere decisión del cliente.</small></div></div>
+                        <div class="activity-event"><div class="activity-time">Ayer · 15:10</div><div><h3>Mensaje de Gradum</h3><small>Se confirmó la próxima actividad del proyecto.</small></div></div>
+                        <div class="activity-event"><div class="activity-time">Ayer · 11:30</div><div><h3>Avance actualizado</h3><small>El progreso general fue actualizado a 62%.</small></div></div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="eyebrow">Notifications</div>
+                    <h2>Centro de Notificaciones</h2>
+
+                    <div class="comm-card">
+                        <h3>Informe semanal disponible</h3>
+                        <small>Nuevo reporte cargado en Archivos.</small><br>
+                        <span class="status progress">Nuevo</span>
+                    </div>
+
+                    <div class="comm-card">
+                        <h3>Aprobación requerida</h3>
+                        <small>Presupuesto Ajustado V02 pendiente.</small><br>
+                        <span class="status review">Pendiente</span>
+                    </div>
+
+                    <div class="comm-card">
+                        <h3>Mensaje nuevo</h3>
+                        <small>Gradum respondió en Comunicación.</small><br>
+                        <span class="status done">Recibido</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="${id}-communication" class="module">
@@ -982,6 +1171,43 @@ function projectWorkspace(name, division){
         </div>
         ` : ``}
 
+
+        <div id="${id}-nextsteps" class="module">
+            <div class="grid2">
+                <div class="panel">
+                    <div class="eyebrow">Next Steps</div>
+                    <h2>Próximos pasos</h2>
+                    <p>Secuencia clara de lo que ya fue completado, lo que está en curso y lo que sigue.</p>
+
+                    <div class="steps-list">
+                        <div class="step-row done-step"><div class="step-mark">✓</div><div><h3>Alcance definido</h3><small>Objetivos, entregables y responsables confirmados.</small></div></div>
+                        <div class="step-row done-step"><div class="step-mark">✓</div><div><h3>Planificación completada</h3><small>Cronograma base y estructura de trabajo definida.</small></div></div>
+                        <div class="step-row current-step"><div class="step-mark">→</div><div><h3>Aprobación del entregable</h3><small>Esperando decisión del cliente para avanzar.</small></div></div>
+                        <div class="step-row"><div class="step-mark">4</div><div><h3>Ejecución de próxima fase</h3><small>Inicia luego de la aprobación pendiente.</small></div></div>
+                        <div class="step-row"><div class="step-mark">5</div><div><h3>Entrega parcial</h3><small>Programada para el 28 de junio.</small></div></div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="eyebrow">Waiting Status</div>
+                    <h2>Estado de espera</h2>
+                    <div class="waiting-card">
+                        <h3>🟡 Esperando al cliente</h3>
+                        <small>Hay una aprobación pendiente. Al aprobarse, Gradum puede continuar con la siguiente fase.</small><br>
+                        <span class="status review">Acción requerida</span>
+                    </div>
+                    <div class="comm-card">
+                        <h3>Responsable actual</h3>
+                        <small>Cliente / Representante autorizado</small>
+                    </div>
+                    <div class="comm-card">
+                        <h3>Fecha objetivo</h3>
+                        <small>Antes del 28 Jun para evitar retrasos.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="${id}-timeline" class="module">
             <div class="visual-timeline">
                 <div class="timeline-step completed"><div class="circle">1</div><div class="line"></div><h3>Alcance</h3><small>Objetivos y entregables.</small><span>01-03 Jun</span></div>
@@ -989,6 +1215,45 @@ function projectWorkspace(name, division){
                 <div class="timeline-step active-step"><div class="circle">3</div><div class="line"></div><h3>Ejecución</h3><small>Trabajo principal.</small><span>11-25 Jun</span></div>
                 <div class="timeline-step"><div class="circle">4</div><div class="line"></div><h3>Revisión</h3><small>Calidad y aprobación.</small><span>26-28 Jun</span></div>
                 <div class="timeline-step"><div class="circle">5</div><h3>Entrega</h3><small>Cierre formal.</small><span>29 Jun</span></div>
+            </div>
+        </div>
+
+
+        <div id="${id}-files" class="module">
+            <div class="panel">
+                <div class="eyebrow">File Center</div>
+                <h2>Centro de Archivos</h2>
+                <p>Archivos principales del proyecto con versión, fecha y acción rápida.</p>
+
+                <div class="file-list">
+                    <div class="file-row">
+                        <div class="file-title"><div class="file-icon">📄</div><div><h3>Contrato Principal.pdf</h3><small>Documento base del servicio.</small></div></div>
+                        <small>V01</small>
+                        <small>12 Jun</small>
+                        <button class="btn-soft" onclick="viewDocument('Contrato Principal.pdf')">Ver</button>
+                    </div>
+
+                    <div class="file-row">
+                        <div class="file-title"><div class="file-icon">📄</div><div><h3>Presupuesto Ajustado V02.pdf</h3><small>Pendiente de aprobación del cliente.</small></div></div>
+                        <small>V02</small>
+                        <small>19 Jun</small>
+                        <button class="btn-soft" onclick="viewDocument('Presupuesto Ajustado V02.pdf')">Ver</button>
+                    </div>
+
+                    <div class="file-row">
+                        <div class="file-title"><div class="file-icon">📊</div><div><h3>Informe Semanal #04.pdf</h3><small>Avance, comentarios y próximos pasos.</small></div></div>
+                        <small>V04</small>
+                        <small>Hoy</small>
+                        <button class="btn-soft" onclick="viewDocument('Informe Semanal #04.pdf')">Ver</button>
+                    </div>
+
+                    <div class="file-row">
+                        <div class="file-title"><div class="file-icon">🗂️</div><div><h3>Entregables Técnicos.zip</h3><small>Archivos finales y soportes técnicos.</small></div></div>
+                        <small>V01</small>
+                        <small>18 Jun</small>
+                        <button class="btn-soft" onclick="viewDocument('Entregables Técnicos.zip')">Ver</button>
+                    </div>
+                </div>
             </div>
         </div>
 
