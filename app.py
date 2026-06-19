@@ -138,6 +138,125 @@ h1{
     background:var(--soft);
 }
 
+.top-actions{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    position:relative;
+}
+
+.notification-wrap{
+    position:relative;
+}
+
+.bell-btn{
+    width:44px;
+    height:44px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background:var(--soft);
+    color:var(--text);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    transition:.2s;
+    position:relative;
+}
+
+.bell-btn:hover{
+    border-color:rgba(123,227,168,.55);
+    background:rgba(123,227,168,.08);
+}
+
+.bell-dot{
+    position:absolute;
+    top:8px;
+    right:8px;
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:var(--accent2);
+    box-shadow:0 0 0 4px rgba(200,245,123,.12);
+}
+
+.notification-panel{
+    display:none;
+    position:absolute;
+    right:0;
+    top:54px;
+    width:360px;
+    border:1px solid var(--line);
+    border-radius:22px;
+    background:rgba(7,23,19,.98);
+    backdrop-filter:blur(18px);
+    box-shadow:0 24px 80px rgba(0,0,0,.35);
+    padding:16px;
+    z-index:5000;
+}
+
+.notification-panel.open{
+    display:block;
+}
+
+.notification-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:12px;
+}
+
+.notification-head h3{
+    font-weight:500;
+    font-size:17px;
+}
+
+.notification-item{
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:rgba(10,31,26,.55);
+    padding:14px;
+    margin-bottom:10px;
+}
+
+.notification-item h4{
+    font-weight:500;
+    font-size:14px;
+    margin-bottom:5px;
+}
+
+.notification-item small{
+    display:block;
+    color:var(--muted);
+}
+
+
+.notification-item{
+    cursor:pointer;
+    transition:.2s;
+}
+
+.notification-item:hover{
+    border-color:rgba(123,227,168,.55);
+    background:rgba(123,227,168,.07);
+}
+
+.notification-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:10px;
+}
+
+.notification-footer{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    margin-top:12px;
+}
+
 .hero{
     border:1px solid var(--line);
     border-radius:28px;
@@ -777,7 +896,7 @@ h1{
     .visual-timeline{grid-template-columns:1fr;gap:12px}
     .timeline-step{border-radius:18px!important}
     .line{display:none}
-    .topbar{align-items:flex-start;gap:12px;flex-direction:column}
+    .topbar{align-items:flex-start;gap:12px;flex-direction:column}.top-actions{width:100%;justify-content:space-between}.notification-panel{right:auto;left:0;width:min(360px,calc(100vw - 40px))}
     .hero h2{font-size:34px}
 }
 </style>
@@ -810,7 +929,54 @@ h1{
             <div class="eyebrow">Private Client Workspace</div>
             <h1>Gradum OS</h1>
         </div>
-        <div class="user">Elvin González</div>
+        <div class="top-actions">
+            <div class="notification-wrap">
+                <button class="bell-btn" onclick="toggleNotifications()" title="Notificaciones">
+                    🔔
+                    <span class="bell-dot" id="bellDot"></span>
+                </button>
+
+                <div class="notification-panel" id="notificationPanel">
+                    <div class="notification-head">
+                        <h3>Notificaciones</h3>
+                        <span class="status review" id="notificationCount">3 pendientes</span>
+                    </div>
+
+                    <div class="notification-item" onclick="openNotification('construction','Remodelación Local Comercial','files')">
+                        <h4>Informe semanal disponible</h4>
+                        <small>Informe Semanal #04 fue cargado en Archivos.</small>
+                        <div class="notification-meta">
+                            <span class="status progress">Nuevo</span>
+                            <span class="status done">Remodelación Local Comercial</span>
+                        </div>
+                    </div>
+
+                    <div class="notification-item" onclick="openNotification('construction','Remodelación Local Comercial','approvals')">
+                        <h4>Aprobación requerida</h4>
+                        <small>Presupuesto Ajustado V02 requiere decisión del cliente.</small>
+                        <div class="notification-meta">
+                            <span class="status review">Pendiente</span>
+                            <span class="status done">Remodelación Local Comercial</span>
+                        </div>
+                    </div>
+
+                    <div class="notification-item" onclick="openNotification('construction','Remodelación Local Comercial','communication')">
+                        <h4>Mensaje nuevo de Gradum</h4>
+                        <small>Hay una respuesta reciente en Comunicación.</small>
+                        <div class="notification-meta">
+                            <span class="status done">Recibido</span>
+                            <span class="status done">Remodelación Local Comercial</span>
+                        </div>
+                    </div>
+
+                    <div class="notification-footer">
+                        <button class="btn-soft" onclick="markNotificationsRead()">Marcar todos como leídos</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="user">Elvin González</div>
+        </div>
     </div>
 
     <div id="home" class="section active">
@@ -910,6 +1076,63 @@ h1{
 </div>
 
 <script>
+function toggleNotifications(){
+    const panel = document.getElementById("notificationPanel");
+    if(panel){ panel.classList.toggle("open"); }
+}
+
+function openNotification(division, projectName, moduleName){
+    const panel = document.getElementById("notificationPanel");
+    if(panel){ panel.classList.remove("open"); }
+
+    goTo(division);
+
+    if(projectName){
+        openProject(division, projectName);
+    }
+
+    setTimeout(() => {
+        const moduleId = division + "Module-" + moduleName;
+        const projectContainer = document.getElementById(division + "Project");
+        const buttons = projectContainer ? projectContainer.querySelectorAll(".tabs button") : [];
+
+        buttons.forEach(button => {
+            const action = button.getAttribute("onclick") || "";
+            if(action.includes(moduleId)){
+                button.click();
+            }
+        });
+
+        if(projectContainer){
+            projectContainer.scrollIntoView({behavior:"smooth", block:"start"});
+        }
+    }, 80);
+}
+
+function markNotificationsRead(){
+    const dot = document.getElementById("bellDot");
+    const count = document.getElementById("notificationCount");
+    const panel = document.getElementById("notificationPanel");
+
+    if(dot){ dot.style.display = "none"; }
+    if(count){
+        count.textContent = "0 pendientes";
+        count.className = "status done";
+    }
+    if(panel){ panel.classList.remove("open"); }
+
+    toast("Notificaciones marcadas como leídas");
+}
+
+document.addEventListener("click", function(event){
+    const wrap = document.querySelector(".notification-wrap");
+    const panel = document.getElementById("notificationPanel");
+
+    if(wrap && panel && !wrap.contains(event.target)){
+        panel.classList.remove("open");
+    }
+});
+
 function toggleDivisions(){
     document.getElementById("divisionMenu").classList.toggle("open");
 }
